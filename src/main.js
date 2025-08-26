@@ -1,4 +1,5 @@
 import './style.css';
+import './script.js'; // 导入业务逻辑
 // 注释掉默认的 Vite 模板代码
 /*
 import javascriptLogo from './javascript.svg';
@@ -25,4 +26,6 @@ document.querySelector('#app').innerHTML = `
 setupCounter(document.querySelector('#counter'));
 */
 // 你的自定义逻辑（如果需要）
-console.log('main.js loaded');
+// src/main.js
+
+console.log('Main script loaded');
