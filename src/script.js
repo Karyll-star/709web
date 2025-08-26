@@ -695,7 +695,7 @@ function initializeFunDirectory() {
     const prevBtn = document.getElementById('fun-prev');
     const nextBtn = document.getElementById('fun-next');
     const indicator = document.getElementById('fun-indicator');
-    if (!grid || !prevBtn || !nextBtn || !indicator) return;
+    if (!grid || !prevBtn || !nextBtn) return;
 
     const emojis = ['😀','🥳','🎉','🎈','🎮','🎵','🧩','📸','🧪','🗺️','🧭','🧠','📚','🧷','🪄','🌟','🍀','🔥','✨','💎'];
     let page = 1;
@@ -726,17 +726,25 @@ function initializeFunDirectory() {
         if (page > total) page = total;
         const start = (page - 1) * perPage;
         const items = data.slice(start, start + perPage);
+        // 防御：若渲染结果为空，则回退到第一页
+        if (items.length === 0 && data.length > 0) {
+            page = 1;
+            return render();
+        }
         grid.innerHTML = items.map(renderCard).join('');
-        indicator.textContent = `${page} / ${total}`;
-        prevBtn.disabled = page <= 1;
-        nextBtn.disabled = page >= total;
+        if (indicator) indicator.textContent = '';
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
     }
 
     function renderCard(item) {
         const emoji = emojis[Math.floor(Math.random() * emojis.length)];
         return `
           <a href="${item.url}" target="_blank" rel="noopener" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
-            <div class="w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#D4A5D6;">${emoji}</div>
+            <div class="w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow"
+                 style="border-color:#D4A5D6; font-family: 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Twemoji Mozilla','EmojiOne Color',sans-serif; line-height: 1;">
+              ${emoji}
+            </div>
             <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">${escapeHtml(item.title).slice(0, 12)}</div>
           </a>
         `;
@@ -746,9 +754,24 @@ function initializeFunDirectory() {
         return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
     }
 
-    prevBtn.onclick = () => { if (page > 1) { page -= 1; render(); } };
-    nextBtn.onclick = () => { page += 1; render(); };
+    prevBtn.onclick = () => {
+        perPage = computePerPage();
+        const total = Math.max(1, Math.ceil(data.length / perPage));
+        page = (page <= 1) ? total : (page - 1);
+        render();
+    };
+    nextBtn.onclick = () => {
+        perPage = computePerPage();
+        const total = Math.max(1, Math.ceil(data.length / perPage));
+        page = (page >= total) ? 1 : (page + 1);
+        render();
+    };
     window.addEventListener('resize', debounce(() => { render(); }, 150));
+    // 初次渲染前确保 grid 存在并非 display:none
+    if (grid.offsetParent === null) {
+        // 若因样式原因不可见，稍后再渲染一次
+        setTimeout(() => render(), 50);
+    }
 
     render();
 }
