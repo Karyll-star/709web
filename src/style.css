@@ -1,0 +1,299 @@
+/* 直接导入 Tailwind CSS（保持不变，Vite 插件会处理） */
+@import "tailwindcss";
+
+/* 自定义动画和特殊样式 - 配合原生 CSS 使用 */
+/* 波浪动画 */
+@keyframes wave {
+    0%, 100% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-20px); }
+}
+
+.animate-wave1 {
+    animation: wave 3s ease-in-out infinite;
+}
+
+.animate-wave2 {
+    animation: wave 3s ease-in-out infinite 1s;
+}
+
+.animate-wave3 {
+    animation: wave 3s ease-in-out infinite 2s;
+}
+
+/* 导航链接样式 */
+.nav-link {
+    color: #1F2937; /* text-gray-800 */
+    font-weight: 500; /* font-medium */
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem;
+    padding-top: 0.5rem; /* py-2 */
+    padding-bottom: 0.5rem;
+    border-radius: 9999px; /* rounded-full */
+    transition: all 0.3s; /* transition-all duration-300 */
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link:hover {
+    background-color: #F8E1E9; /* bg-milk-pink */
+    color: #1F2937; /* text-gray-800 */
+    transform: translateY(-0.125rem); /* -translate-y-0.5 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); /* shadow-bright-yellow/30 */
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    left: -100%; /* -left-full */
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent); /* bg-gradient-to-r from-transparent via-white/40 to-transparent */
+    transition: left 0.5s; /* transition-left duration-500 */
+}
+
+.nav-link:hover::before {
+    left: 100%; /* left-full */
+}
+
+/* 星星效果 */
+.star-effect {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* 眨眼动画 */
+@keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    92% { transform: scaleY(0.1); }
+}
+
+.animate-blink {
+    animation: blink 3.5s infinite;
+}
+
+/* 鱼尾摆动动画 */
+@keyframes tail-swing {
+    0% { transform: rotate(-20deg) scaleY(1); }
+    100% { transform: rotate(20deg) scaleY(0.85); }
+}
+
+.animate-tail-swing {
+    animation: tail-swing 0.7s infinite alternate;
+}
+
+/* 拖拽状态样式 */
+.pet.dragging {
+    box-shadow: 0 25px 50px -12px rgba(255, 215, 0, 0.5); /* shadow-2xl shadow-bright-yellow/50 */
+    border: 3px dashed #D4A5D6; /* border-3 border-dashed border-jelly-purple */
+    z-index: 20; /* z-20 */
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .pet-plant-wrapper {
+        flex-direction: column; /* flex-col */
+        gap: 2rem; /* gap-8 */
+    }
+    
+    .pet-block, .plant-block {
+        min-width: 0; /* min-w-0 */
+        margin-left: 0; /* mx-0 */
+        margin-right: 0;
+    }
+    
+    .pet-container, .plant-container {
+        gap: 1.25rem; /* gap-5 */
+    }
+    
+    .rules-container, .ai-dorm-leader {
+        flex-direction: column; /* flex-col */
+        gap: 1.25rem; /* gap-5 */
+        min-width: 0; /* min-w-0 */
+        padding: 1.25rem; /* p-5 */
+    }
+    
+    .leader-avatar img {
+        width: 5rem; /* w-20 */
+        height: 5rem; /* h-20 */
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        flex-direction: column; /* flex-col */
+        gap: 0.625rem; /* gap-2.5 */
+    }
+    
+    .roommates-grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+    }
+    
+    .countdown-container {
+        grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+    }
+}
+
+/* 特殊动画效果 */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.flash {
+    animation: flash 0.3s ease-in-out;
+}
+
+/* 节日倒计时特殊效果 */
+.countdown-timer.urgent {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.countdown-timer.final-day {
+    animation: flash 0.5s ease-in-out infinite;
+}
+
+/* 通知样式 */
+.notification {
+    position: fixed;
+    top: 1.25rem; /* top-5 */
+    right: 1.25rem; /* right-5 */
+    background-color: #FFD700; /* bg-bright-yellow */
+    color: #1F2937; /* text-gray-800 */
+    padding: 1.25rem 1.25rem; /* px-5 py-4 */
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 25px 50px -12px rgba(75, 85, 99, 0.3); /* shadow-xl shadow-gray-400/30 */
+    z-index: 3000; /* z-[3000] */
+    transform: translateX(100%); /* translate-x-full */
+    transition: transform 0.3s; /* transition-transform duration-300 */
+}
+
+/* 弹窗动画 */
+.modal {
+    transition: opacity 0.3s ease;
+}
+
+/* 自定义工具类 */
+.clip-polygon {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* 鱼缸特殊样式 */
+.fish-tank {
+    border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 小鱼样式 */
+.swim-fish {
+    position: absolute;
+    z-index: 20;
+    pointer-events: auto;
+    transition: all 0.5s ease;
+}
+
+.fish-body {
+    border-radius: 50% 60% 60% 50% / 60% 60% 40% 40%;
+}
+
+.fish-tail {
+    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
+}
+
+.fish-eye {
+    position: absolute;
+    z-index: 25;
+}
+
+/* 水波动画 */
+@keyframes water-move {
+    0% { filter: blur(2px) brightness(1); }
+    100% { filter: blur(6px) brightness(1.05); }
+}
+
+.water {
+    animation: water-move 4s linear infinite alternate;
+}
+
+/* 植物叶子动画 */
+@keyframes leaf-sway {
+    0% { transform: translateX(-50%) rotate(-10deg) scaleY(1); }
+    100% { transform: translateX(-50%) rotate(10deg) scaleY(0.95); }
+}
+
+.plant-sticker::after {
+    content: '';
+    position: absolute;
+    top: 0.625rem; /* top-2.5 */
+    left: 50%;
+    width: 1.875rem; /* w-7.5 */
+    height: 2.5rem; /* h-10 */
+    background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.6), #D4A5D6); /* from-mint-green/60 to-jelly-purple/100 */
+    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
+    transform: translateX(-50%) rotate(-10deg);
+    opacity: 0.6; /* opacity-60 */
+    animation: leaf-sway 1.8s infinite alternate;
+}
+
+/* 宠物贴纸增强样式 */
+.pet-sticker::after {
+    content: '';
+    position: absolute;
+    right: -1.5rem; /* -right-6 */
+    bottom: 2.5rem; /* bottom-10 */
+    width: 2rem; /* w-8 */
+    height: 2rem; /* h-8 */
+    background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.6), #F8E1E9); /* from-mint-green/60 to-milk-pink/100 */
+    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
+    transform: rotate(-20deg); /* -rotate-20 */
+    opacity: 0.7; /* opacity-70 */
+    animation: tail-swing 1.2s infinite alternate;
+}
+
+/* 拖拽时的视觉反馈 */
+.pet:active .pet-sticker, .pet.dragging .pet-sticker {
+    transform: scale(1.1) rotate(-6deg); /* scale-110 -rotate-6 */
+    box-shadow: 0 25px 50px -12px rgba(212, 165, 214, 0.5); /* shadow-2xl shadow-jelly-purple/50 */
+    z-index: 10; /* z-10 */
+}
+/* 室友卡片圆角 */
+
+
+.roommate-card {
+  background-color: #F8E1E9; /* milk-pink */
+  border-radius: 1.5rem; /* 24px */
+  overflow: hidden;
+  transition: all 0.3s ease;
+  transform: perspective(1000px) rotate(0deg);
+}
+.roommate-card:hover {
+  background: linear-gradient(135deg, #F8E1E9, #FFD1DC); /* 渐变 */
+  box-shadow: 0 10px 20px rgba(212, 165, 214, 0.5); /* jelly-purple 光晕 */
+  transform: perspective(10px) translateY(-5px) rotate(1deg); /* 提升+倾斜 */
+}
+.roommate-card img {
+  border-radius: 1rem; /* 16px */
+  transition: all 0.3s ease;
+}
+.roommate-card:hover img {
+  transform: scale(1.05);
+}
+.card-quote {
+  border-radius: 1rem; /* 16px */
+  transition: all 0.3s ease;
+}
+.roommate-card:hover .card-quote {
+  background: #FFF8F2; /* sakura-white */
+  box-shadow: 0 4px 8px rgba(152, 251, 152, 0.3); /* mint-green 光晕 */
+}
