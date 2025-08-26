@@ -669,6 +669,97 @@ function openInNewTab(url) {
     }
 }
 
+// 趣味区动态渲染与分页
+function initializeFunDirectory() {
+    const data = [
+        { url: 'https://www.lalal.ai/zh-hans/', title: '音轨分离' },
+        { url: 'https://tianyin.music.163.com/#/', title: '网易音乐' },
+        { url: 'https://dashtoon.com/create', title: 'AI漫画' },
+        { url: 'https://www.aihubpro.cn/', title: 'AI百科' },
+        { url: 'https://itakeo.com/blog/?p=915', title: '集赞工具' },
+        { url: 'https://volumeshader.org/zh', title: '显卡测试' },
+        { url: 'https://my.matterport.com/show/?m=SZSV6vjcf4L', title: '3D导览' },
+        { url: 'https://storybook.baby/zh', title: 'AI绘本' },
+        { url: 'https://www.sendkeeps.com/', title: '语音明信片' },
+        { url: 'https://gitee.com/ysgdaydayup/DotNetGuide/blob/main/docs/DotNet/DotNetProjectPicks.md', title: 'gitee精选' },
+        { url: 'http://47.96.9.75/welcome', title: '品三国' },
+        { url: 'https://kirigaya.cn/ktools', title: '工具博客' },
+        { url: 'https://www.xiachufang.com/', title: '学做菜' },
+        { url: 'https://www.16personalities.com/ch', title: '人格测试' },
+        { url: 'https://info.tokyo-digitaltwin.metro.tokyo.lg.jp/3dmodel/', title: '东京孪生' },
+        { url: 'https://www.zhaosecha.com/?utm_source=https://shadiao.pro', title: '色差游戏' },
+        { url: 'https://nodes-escape.hzfe.org/', title: '解谜游戏' }
+    ];
+
+    const grid = document.getElementById('fun-grid');
+    const prevBtn = document.getElementById('fun-prev');
+    const nextBtn = document.getElementById('fun-next');
+    const indicator = document.getElementById('fun-indicator');
+    if (!grid || !prevBtn || !nextBtn || !indicator) return;
+
+    const emojis = ['😀','🥳','🎉','🎈','🎮','🎵','🧩','📸','🧪','🗺️','🧭','🧠','📚','🧷','🪄','🌟','🍀','🔥','✨','💎'];
+    let page = 1;
+    let perPage = computePerPage();
+
+    function computePerPage() {
+        // 依据当前列数计算（两排）
+        const cols = getComputedCols();
+        return cols * 2;
+    }
+
+    function getComputedCols() {
+        // 读取 grid-template-columns 的 repeat 个数；若失败，按断点估计
+        const style = window.getComputedStyle(grid);
+        const tmpl = style.gridTemplateColumns || '';
+        const count = tmpl.split(' ').filter(Boolean).length;
+        if (count > 0) return count;
+        const w = window.innerWidth;
+        if (w >= 1024) return 6;
+        if (w >= 768) return 4;
+        if (w >= 640) return 3;
+        return 2;
+    }
+
+    function render() {
+        perPage = computePerPage();
+        const total = Math.max(1, Math.ceil(data.length / perPage));
+        if (page > total) page = total;
+        const start = (page - 1) * perPage;
+        const items = data.slice(start, start + perPage);
+        grid.innerHTML = items.map(renderCard).join('');
+        indicator.textContent = `${page} / ${total}`;
+        prevBtn.disabled = page <= 1;
+        nextBtn.disabled = page >= total;
+    }
+
+    function renderCard(item) {
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+        return `
+          <a href="${item.url}" target="_blank" rel="noopener" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+            <div class="w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#D4A5D6;">${emoji}</div>
+            <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">${escapeHtml(item.title).slice(0, 12)}</div>
+          </a>
+        `;
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
+
+    prevBtn.onclick = () => { if (page > 1) { page -= 1; render(); } };
+    nextBtn.onclick = () => { page += 1; render(); };
+    window.addEventListener('resize', debounce(() => { render(); }, 150));
+
+    render();
+}
+
+function debounce(fn, wait) {
+    let t = null;
+    return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
+}
 // 页面加载完成后的初始化
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('modal');
@@ -699,6 +790,9 @@ document.addEventListener('DOMContentLoaded', function() {
             el.textContent = emojis[rnd];
         });
     } catch (_) {}
+
+    // 初始化趣味区动态渲染与分页
+    initializeFunDirectory();
     
     // 页面加载动画
     document.body.style.opacity = '0';
