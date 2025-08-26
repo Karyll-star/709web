@@ -691,6 +691,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavigation();
     enablePetDragDrop();
     animateFishTank();
+    // 趣味区：随机为圆形图标分配 Emoji（如果需要更新，可扩展）
+    try {
+        const emojis = ['😀','🥳','🎉','🎈','🎮','🎵','🧩','📸','🧪','🗺️','🧭','🧠','📚','🧷','🪄','🌟','🍀','🔥','✨','💎'];
+        document.querySelectorAll('.fun-emoji').forEach(el => {
+            const rnd = Math.floor(Math.random() * emojis.length);
+            el.textContent = emojis[rnd];
+        });
+    } catch (_) {}
     
     // 页面加载动画
     document.body.style.opacity = '0';

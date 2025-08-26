@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/src/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%8F%A0%3C/text%3E%3C/svg%3E">
 </head>
 <body style="font-family: 'Noto Sans JP', sans-serif; background-color: #FFF8F2; overflow-x: hidden;" class="relative">
   <div class="fixed inset-0 -z-10 overflow-hidden">
@@ -23,8 +24,9 @@
       </div>
       <div class="flex gap-5">
         <a href="#roommates" class="nav-link">舍友一览</a>
-        <a href="#call" class="nav-link">通话模块</a>
         <a href="#pets" class="nav-link">宠物窝</a>
+        <a href="#fun" class="nav-link">趣味区</a>
+        <a href="#call" class="nav-link">通话模块</a>
         <a href="#rules" class="nav-link">今日舍规</a>
         <a href="#countdown" class="nav-link">节日倒计时</a>
       </div>
@@ -146,28 +148,7 @@
 
       </div>
     </section>
-
-    <section id="call" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20">
-      <h2 class="flex items-center gap-4 mb-6 text-4xl font-bold text-gray-800">
-        <span class="relative">通话模块</span>
-        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-base px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">みんな話そう！</span>
-        <i class="fas fa-phone-volume" style="color: #FFD700;" class="animate-bounce"></i>
-      </h2>
-      <div class="flex items-center justify-between mb-5">
-        <p class="text-gray-600 text-sm md:text-base">使用内置的 MiroTalk CME 进行实时语音/视频通话。</p>
-        <div class="flex items-center gap-3">
-         
-          <button style="background-color: #FFD700;" class="px-3 py-2 text-gray-900 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm" onclick="toggleFullscreenById('call-embed')">
-            全屏/退出
-          </button>
-        </div>
-      </div>
-      <div id="call-embed" class="relative w-full rounded-2xl border-2 overflow-hidden shadow-xl" style="border-color: #D4A5D6; background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.4), rgba(248, 225, 233, 0.4));">
-        <div class="w-full pt-[56.25%]"></div>
-        <iframe allow="camera; microphone; fullscreen; clipboard-read; clipboard-write; web-share; autoplay" src="https://cme.mirotalk.com/" class="absolute inset-0 w-full h-full" style="border:0"></iframe>
-      </div>
-    </section>
-
+    
     <section id="pets" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20">
       <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800">
         <span class="relative">宠物窝</span>
@@ -226,6 +207,86 @@
         </div>
       </div>
     </section>
+
+    <section id="fun" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20">
+      <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800">
+        <span class="relative">趣味区</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-base px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">たのしい！</span>
+      </h2>
+      <p class="text-gray-600 mb-6">收集一些有意思的网站，随便逛逛～（占位示例，可后续替换为你的链接）</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#D4A5D6;">😀</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">好玩网站</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#98FB98;">🎮</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">小游戏吧</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#FFD700;">🧩</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">解谜集合</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#F8E1E9;">🎵</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">音乐电台</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#D4A5D6;">📸</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">摄影灵感</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#98FB98;">🧪</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">小实验室</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#FFD700;">🗺️</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">奇妙地图</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#F8E1E9;">🧭</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">导航秘境</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#D4A5D6;">🧠</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">脑洞工厂</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#98FB98;">📚</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">阅读书屋</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#FFD700;">🧷</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">工具集合</div>
+        </a>
+        <a href="#" class="group flex flex-col items-center gap-2 p-3 rounded-2xl bg-white/70 shadow transition-all hover:-translate-y-0.5 hover:shadow-lg border" style="border-color:#F8E1E9;">
+          <div class="fun-emoji w-14 h-14 rounded-full bg-white/90 border-2 flex items-center justify-center text-2xl shadow" style="border-color:#D4A5D6;">🪄</div>
+          <div class="text-xs text-gray-700 bg-white/80 px-2 py-1 rounded-lg shadow">魔法乐园</div>
+        </a>
+      </div>
+    </section>
+
+    <section id="call" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20">
+      <h2 class="flex items-center gap-4 mb-6 text-4xl font-bold text-gray-800">
+        <span class="relative">通话模块</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-base px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">みんな話そう！</span>
+        <i class="fas fa-phone-volume" style="color: #FFD700;" class="animate-bounce"></i>
+      </h2>
+      <div class="flex items-center justify-between mb-5">
+        <p class="text-gray-600 text-sm md:text-base">使用内置的 MiroTalk CME 进行实时语音/视频通话。</p>
+        <div class="flex items-center gap-3">
+         
+          <button style="background-color: #FFD700;" class="px-3 py-2 text-gray-900 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm" onclick="toggleFullscreenById('call-embed')">
+            全屏/退出
+          </button>
+        </div>
+      </div>
+      <div id="call-embed" class="relative w-full rounded-2xl border-2 overflow-hidden shadow-xl" style="border-color: #D4A5D6; background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.4), rgba(248, 225, 233, 0.4));">
+        <div class="w-full pt-[56.25%]"></div>
+        <iframe allow="camera; microphone; fullscreen; clipboard-read; clipboard-write; web-share; autoplay" src="https://cme.mirotalk.com/" class="absolute inset-0 w-full h-full" style="border:0"></iframe>
+      </div>
+    </section>
+
 
     <section id="rules" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20">
       <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800">
