@@ -293,13 +293,15 @@ function renderCountdownItem(f) {
 function getFestivalsForYear(year) {
     // 简化：公历固定节日，农历节日用近似日期（可后续接入精确农历换算）
     const list = [
+        { name: '周兴生日', month: 11, day: 17, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
+        { name: '刘智睿生日', month: 7, day: 23, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
+        { name: '杨林涣生日', month: 5, day: 25, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
+        { name: '贾昊凝生日', month: 10, day: 9, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
         { name: '初音未来日', month: 11, day: 11, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
         { name: '元旦', month: 1, day: 1, icon: 'https://images.unsplash.com/photo-1519682577862-22b62b24e493?auto=format&fit=crop&w=60&q=80' },
         { name: '情人节', month: 2, day: 14, icon: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=60&q=80' },
-        { name: '清明节', month: 4, day: 4, icon: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=60&q=80' },
         { name: '劳动节', month: 5, day: 1, icon: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=60&q=80' },
         { name: '儿童节', month: 6, day: 1, icon: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=60&q=80' },
-        { name: '建军节', month: 8, day: 1, icon: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=60&q=80' },
         { name: '教师节', month: 9, day: 10, icon: 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=60&q=80' },
         { name: '国庆节', month: 10, day: 1, icon: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=60&q=80' },
         { name: '圣诞节', month: 12, day: 25, icon: 'https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=60&q=80' },
@@ -354,7 +356,7 @@ function showNotification(message) {
 
 // 导航功能
 function initializeNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -370,8 +372,38 @@ function initializeNavigation() {
                     block: 'start'
                 });
             }
+            
+            // 移动端点击后关闭菜单
+            if (this.classList.contains('mobile-nav-link')) {
+                closeMobileMenu();
+            }
         });
     });
+    
+    // 移动端菜单切换
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function() {
+            toggleMobileMenu();
+        });
+    }
+}
+
+// 移动端菜单控制
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
+        mobileMenu.classList.toggle('hidden');
+    }
+}
+
+function closeMobileMenu() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
+        mobileMenu.classList.add('hidden');
+    }
 }
 
 // 漂移动画函数
@@ -604,32 +636,66 @@ function animateFishTank() {
             return;
         }
         console.log(`小鱼${i+1}元素找到:`, fish.el);
+        
+        // 强制显示小鱼
+        fish.el.style.display = 'block';
+        fish.el.style.visibility = 'visible';
+        fish.el.style.opacity = '1';
     });
     
-    const tankW = 320, tankH = 200, fishW = 48, fishH = 28, margin = 10;
+    // 响应式鱼缸尺寸
+    const getTankDimensions = () => {
+        const tankRect = tank.getBoundingClientRect();
+        const w = Math.min(tankRect.width, 320);
+        const h = Math.min(tankRect.height, 200);
+        return { w, h };
+    };
+    
     let t = 0;
     
     // 设置小鱼的初始位置
-    fishes.forEach((fish, i) => {
-        if (fish.el) {
-            // 确保小鱼有正确的定位样式
-            fish.el.style.position = 'absolute';
-            fish.el.style.left = (margin + (i * 60)) + 'px';
-            fish.el.style.top = fish.y + 'px';
-            fish.el.style.transform = 'scaleX(1)';
-            fish.el.style.zIndex = '20';
-            fish.lastX = margin + (i * 60);
-            
-            console.log(`设置小鱼${i+1}初始位置:`, fish.el.style.left, fish.el.style.top);
-        }
-    });
+    function setupFish() {
+        const { w: tankW } = getTankDimensions();
+        const fishW = 48, margin = 10;
+        
+        fishes.forEach((fish, i) => {
+            if (fish.el) {
+                // 确保小鱼有正确的定位样式
+                fish.el.style.position = 'absolute';
+                fish.el.style.left = (margin + (i * 60)) + 'px';
+                fish.el.style.top = fish.y + 'px';
+                fish.el.style.transform = 'scaleX(1)';
+                fish.el.style.zIndex = '20';
+                fish.lastX = margin + (i * 60);
+                
+                // 再次确保小鱼可见
+                fish.el.style.display = 'block';
+                fish.el.style.visibility = 'visible';
+                fish.el.style.opacity = '1';
+                
+                console.log(`设置小鱼${i+1}初始位置:`, fish.el.style.left, fish.el.style.top);
+                console.log(`小鱼${i+1}样式:`, {
+                    display: fish.el.style.display,
+                    visibility: fish.el.style.visibility,
+                    opacity: fish.el.style.opacity,
+                    position: fish.el.style.position,
+                    zIndex: fish.el.style.zIndex
+                });
+            }
+        });
+    }
     
     function moveFish() {
         t += 0.03;
+        const { w: tankW } = getTankDimensions();
+        const fishW = 48, margin = 10;
+        
         fishes.forEach((fish, i) => {
             if (!fish.el) return;
             
             let range = tankW - fishW - margin * 2;
+            if (range < 0) range = 0; // 防止负数范围
+            
             let x = Math.abs(Math.sin(t * fish.speed + i)) * range;
             if (fish.dir < 0) x = range - x;
             let y = fish.y + Math.sin(t * fish.speed + i * 1.5) * 10;
@@ -646,8 +712,29 @@ function animateFishTank() {
     // 延迟启动动画，确保DOM完全加载
     setTimeout(() => {
         console.log('启动小鱼游动动画');
+        setupFish();
         moveFish();
+        
+        // 再次检查小鱼状态
+        setTimeout(() => {
+            fishes.forEach((fish, i) => {
+                if (fish.el) {
+                    console.log(`小鱼${i+1}最终状态:`, {
+                        display: window.getComputedStyle(fish.el).display,
+                        visibility: window.getComputedStyle(fish.el).visibility,
+                        opacity: window.getComputedStyle(fish.el).opacity,
+                        position: window.getComputedStyle(fish.el).position,
+                        zIndex: window.getComputedStyle(fish.el).zIndex
+                    });
+                }
+            });
+        }, 1000);
     }, 500);
+    
+    // 窗口大小变化时重新设置小鱼位置
+    window.addEventListener('resize', debounce(() => {
+        setupFish();
+    }, 150));
 }
 
 // 通话模块辅助函数
@@ -708,16 +795,13 @@ function initializeFunDirectory() {
     }
 
     function getComputedCols() {
-        // 读取 grid-template-columns 的 repeat 个数；若失败，按断点估计
-        const style = window.getComputedStyle(grid);
-        const tmpl = style.gridTemplateColumns || '';
-        const count = tmpl.split(' ').filter(Boolean).length;
-        if (count > 0) return count;
+        // 响应式断点优化，参考趣味区的网格架构
         const w = window.innerWidth;
-        if (w >= 1024) return 6;
-        if (w >= 768) return 4;
-        if (w >= 640) return 3;
-        return 2;
+        if (w >= 1280) return 6;      // xl: 6列
+        if (w >= 1024) return 5;      // lg: 5列
+        if (w >= 768) return 4;       // md: 4列
+        if (w >= 640) return 3;       // sm: 3列
+        return 2;                      // 默认: 2列
     }
 
     function render() {
@@ -766,7 +850,13 @@ function initializeFunDirectory() {
         page = (page >= total) ? 1 : (page + 1);
         render();
     };
-    window.addEventListener('resize', debounce(() => { render(); }, 150));
+    // 响应式窗口大小变化处理
+    window.addEventListener('resize', debounce(() => { 
+        render(); 
+        // 更新左侧外链栏显示状态
+        updateSideLinksVisibility();
+    }, 150));
+    
     // 初次渲染前确保 grid 存在并非 display:none
     if (grid.offsetParent === null) {
         // 若因样式原因不可见，稍后再渲染一次
@@ -774,6 +864,20 @@ function initializeFunDirectory() {
     }
 
     render();
+}
+
+// 左侧外链栏响应式控制
+function updateSideLinksVisibility() {
+    const sideLinks = document.getElementById('side-links');
+    if (sideLinks) {
+        if (window.innerWidth >= 1024) {
+            sideLinks.classList.remove('hidden');
+            sideLinks.classList.add('flex');
+        } else {
+            sideLinks.classList.add('hidden');
+            sideLinks.classList.remove('flex');
+        }
+    }
 }
 
 function debounce(fn, wait) {
@@ -816,6 +920,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 初始化趣味区动态渲染与分页
     initializeFunDirectory();
+    
+    // 初始化响应式功能
+    updateSideLinksVisibility();
     
     // 页面加载动画
     document.body.style.opacity = '0';

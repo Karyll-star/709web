@@ -57,6 +57,40 @@
     left: 100%; /* left-full */
 }
 
+/* 移动端导航链接样式 */
+.mobile-nav-link {
+    color: #1F2937;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.mobile-nav-link:hover {
+    background-color: #F8E1E9;
+    color: #1F2937;
+    border-color: #D4A5D6;
+    transform: translateX(0.25rem);
+}
+
+/* 移动端菜单动画 */
+#mobile-menu {
+    transition: all 0.3s ease-in-out;
+    transform-origin: top;
+}
+
+#mobile-menu.hidden {
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+#mobile-menu:not(.hidden) {
+    transform: scaleY(1);
+    opacity: 1;
+}
+
 /* 星星效果 */
 .star-effect {
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
@@ -132,6 +166,82 @@
     .countdown-container {
         grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
     }
+    
+    /* 移动端优化 */
+    .roommate-card {
+        margin: 0 auto;
+        max-width: 100%;
+    }
+    
+    .fish-tank {
+        width: 100% !important;
+        max-width: 320px;
+    }
+    
+    .plant-sticker {
+        width: 4rem !important;
+        height: 4rem !important;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+    .roommate-card {
+        min-height: 280px;
+        padding: 1rem;
+    }
+    
+    .roommate-card img {
+        height: 8rem !important;
+    }
+    
+    .fish-tank {
+        height: 8rem !important;
+        border-width: 3px !important;
+    }
+    
+    .swim-fish {
+        width: 2.5rem !important;
+        height: 1.5rem !important;
+    }
+    
+    .fish-body {
+        width: 1.5rem !important;
+        height: 1rem !important;
+    }
+    
+    .fish-tail {
+        width: 1rem !important;
+        height: 0.75rem !important;
+    }
+    
+    .plant-sticker {
+        width: 3rem !important;
+        height: 3rem !important;
+    }
+    
+    .eyes div {
+        width: 0.75rem !important;
+        height: 0.75rem !important;
+    }
+    
+    .cheeks div {
+        width: 0.75rem !important;
+        height: 0.5rem !important;
+    }
+    
+    .paws div {
+        width: 0.5rem !important;
+        height: 0.75rem !important;
+    }
+    
+    /* 确保小鱼在移动端正确显示 */
+    .swim-fish[id="fish1"],
+    .swim-fish[id="fish2"] {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
 }
 
 /* 特殊动画效果 */
@@ -161,6 +271,168 @@
 
 .countdown-timer.final-day {
     animation: flash 0.5s ease-in-out infinite;
+}
+
+/* 移动端倒计时时间显示优化 */
+@media (max-width: 768px) {
+    .countdown-timer {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .countdown-timer .days,
+    .countdown-timer .hours,
+    .countdown-timer .minutes {
+        min-width: 2.5rem !important;
+        font-size: 0.875rem !important;
+        padding: 0.5rem 0.25rem !important;
+    }
+    
+    .countdown-timer span {
+        font-size: 0.875rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-timer {
+        /* 移动端垂直布局 - 每个时间项单独一行 */
+        display: flex !important;
+
+        align-items: center !important;
+        gap: 0.75rem !important;
+        justify-content: left !important;
+    }
+    
+    /* 每个时间项独立成行 */
+    .countdown-timer > * {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.1rem !important;
+        width: 100% !important;
+        max-width: 60px !important;
+    }
+    
+    /* 时间数字样式 */
+    .countdown-timer .days,
+    .countdown-timer .hours,
+    .countdown-timer .minutes {
+        min-width: 1rem !important;
+        font-size: 1rem !important;
+        padding: 0.1rem 0.5rem !important;
+        text-align: center !important;
+        background: white !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* 时间单位样式 */
+    .countdown-timer span + * {
+        font-size: 1rem !important;
+        font-weight: bold !important;
+        color: #D4A5D6 !important;
+        min-width: 2rem !important;
+        text-align: center !important;
+    }
+}
+
+/* 节日名称突出样式 */
+.countdown-info h3 {
+    /* 基础样式 */
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    
+    /* 渐变文字效果 */
+    background: linear-gradient(135deg, #D4A5D6, #FF6B9D, #FFD700);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    /* 文字阴影 */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* 动画效果 */
+    animation: gradient-shift 3s ease-in-out infinite;
+    
+    /* 悬停效果 */
+    transition: all 0.3s ease;
+}
+
+.countdown-info h3:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* 渐变文字动画 */
+@keyframes gradient-shift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* 移动端节日名称优化 */
+@media (max-width: 768px) {
+    .countdown-info h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-info h3 {
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+}
+
+/* 节日名称装饰效果 */
+.countdown-info h3::before {
+    content: '🎉';
+    display: inline-block;
+    margin-right: 0.5rem;
+    font-size: 1.2em;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.countdown-info h3::after {
+    content: '✨';
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 1.2em;
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* 装饰动画 */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1) rotate(180deg);
+    }
 }
 
 /* 通知样式 */
@@ -195,12 +467,33 @@
     overflow: hidden;
 }
 
+/* 移动端鱼缸优化 */
+@media (max-width: 640px) {
+    .fish-tank {
+        border-radius: 30% 30% 40% 40% / 50% 50% 30% 30%;
+    }
+}
+
+@media (max-width: 480px) {
+    .fish-tank {
+        border-radius: 25% 25% 35% 35% / 45% 45% 25% 25%;
+    }
+}
+
 /* 小鱼样式 */
 .swim-fish {
     position: absolute;
     z-index: 20;
     pointer-events: auto;
     transition: all 0.5s ease;
+}
+
+/* 确保小鱼在所有设备上都可见 */
+.swim-fish[id="fish1"],
+.swim-fish[id="fish2"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .fish-body {
@@ -229,7 +522,7 @@
 /* 植物叶子动画 */
 @keyframes leaf-sway {
     0% { transform: translateX(-50%) rotate(-10deg) scaleY(1); }
-    100% { transform: translateX(-50%) rotate(10deg) scaleY(0.95); }
+    100% { transform: translateX(-50%) rotate(100deg) scaleY(0.95); }
 }
 
 .plant-sticker::after {
@@ -244,6 +537,116 @@
     transform: translateX(-50%) rotate(-10deg);
     opacity: 0.6; /* opacity-60 */
     animation: leaf-sway 1.8s infinite alternate;
+}
+
+/* 移动端植物叶子动画优化 */
+@media (max-width: 640px) {
+    .plant-sticker::after {
+        width: 1.25rem; /* w-5 */
+        height: 1.75rem; /* h-7 */
+        top: 0.25rem; /* top-1 - 降低位置避免重叠 */
+        /* 调整旋转角度，让叶子更贴近植物边缘 */
+        transform: translateX(-50%) rotate(-15deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .plant-sticker::after {
+        width: 0.875rem; /* w-3.5 - 进一步缩小 */
+        height: 1.25rem; /* h-5 - 进一步缩小 */
+        top: 0.125rem; /* top-0.5 - 进一步降低位置 */
+        /* 调整旋转角度和位置 */
+        transform: translateX(-50%) rotate(-20deg);
+        /* 确保在超小屏幕上不会重叠 */
+        z-index: 1;
+    }
+}
+
+/* 超小屏幕进一步优化叶子位置 */
+@media (max-width: 400px) {
+    .plant-sticker::after {
+        width: 0.75rem; /* w-3 */
+        height: 1rem; /* h-4 */
+        top: 0.0625rem; /* top-0.25 - 几乎贴近顶部边缘 */
+        /* 进一步调整位置，确保不重叠 */
+        transform: translateX(-50%) rotate(-25deg);
+        /* 降低透明度，减少视觉干扰 */
+        opacity: 0.4;
+    }
+}
+
+/* 确保面部元素层级正确 */
+.plant-sticker .eyes {
+    z-index: 30 !important;
+}
+
+.plant-sticker .cheeks {
+    z-index: 10 !important;
+}
+
+.plant-sticker .paws {
+    z-index: 20 !important;
+}
+
+/* 植物腮红圆形样式 */
+.plant-sticker .cheeks div {
+    /* 确保完全圆形 */
+    border-radius: 50% !important;
+    /* 添加圆形阴影效果 */
+    box-shadow: 0 2px 4px rgba(236, 72, 153, 0.3);
+    /* 平滑过渡 */
+    transition: all 0.3s ease;
+    /* 确保圆形显示 */
+    aspect-ratio: 1;
+    /* 添加渐变背景，让腮红更自然 */
+    background: radial-gradient(circle, #fbbf24 0%, #f59e0b 50%, #d97706 100%) !important;
+    /* 确保渐变在圆形内显示 */
+    background-clip: padding-box;
+    /* 添加内阴影，增加立体感 */
+    box-shadow: 
+        inset 0 1px 3px rgba(255, 255, 255, 0.3),
+        0 2px 4px rgba(236, 72, 153, 0.3);
+    /* 添加轻微的脉动动画 */
+    animation: blush-pulse 3s ease-in-out infinite;
+}
+
+/* 腮红悬停效果 */
+.plant-sticker .cheeks div:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(236, 72, 153, 0.5);
+}
+
+/* 腮红脉动动画 */
+@keyframes blush-pulse {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+    }
+}
+
+/* 移动端腮红优化 */
+@media (max-width: 640px) {
+    .plant-sticker .cheeks div {
+        /* 确保移动端也是完美圆形 */
+        border-radius: 50% !important;
+        aspect-ratio: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .plant-sticker .cheeks div {
+        /* 超小屏幕腮红优化 */
+        border-radius: 50% !important;
+        aspect-ratio: 1;
+        /* 添加更柔和的阴影 */
+        box-shadow: 
+            inset 0 1px 2px rgba(255, 255, 255, 0.3),
+            0 1px 3px rgba(236, 72, 153, 0.4);
+    }
 }
 
 /* 宠物贴纸增强样式 */
@@ -267,9 +670,8 @@
     box-shadow: 0 25px 50px -12px rgba(212, 165, 214, 0.5); /* shadow-2xl shadow-jelly-purple/50 */
     z-index: 10; /* z-10 */
 }
+
 /* 室友卡片圆角 */
-
-
 .roommate-card {
   background-color: #F8E1E9; /* milk-pink */
   border-radius: 1.5rem; /* 24px */
@@ -277,23 +679,414 @@
   transition: all 0.3s ease;
   transform: perspective(1000px) rotate(0deg);
 }
+
 .roommate-card:hover {
   background: linear-gradient(135deg, #F8E1E9, #FFD1DC); /* 渐变 */
   box-shadow: 0 10px 20px rgba(212, 165, 214, 0.5); /* jelly-purple 光晕 */
   transform: perspective(10px) translateY(-5px) rotate(1deg); /* 提升+倾斜 */
 }
+
 .roommate-card img {
   border-radius: 1rem; /* 16px */
   transition: all 0.3s ease;
 }
+
 .roommate-card:hover img {
   transform: scale(1.05);
 }
+
 .card-quote {
   border-radius: 1rem; /* 16px */
   transition: all 0.3s ease;
 }
+
 .roommate-card:hover .card-quote {
   background: #FFF8F2; /* sakura-white */
   box-shadow: 0 4px 8px rgba(152, 251, 152, 0.3); /* mint-green 光晕 */
 }
+
+/* 舍友卡片响应式优化 */
+.roommate-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+/* 移动端卡片优化 */
+@media (max-width: 768px) {
+  .roommate-card {
+    min-height: auto;
+    height: auto;
+  }
+  
+  .roommate-card img {
+    height: auto;
+    max-height: 200px;
+    /* 移动端图片优化 - 填满容器边框 */
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .roommate-card {
+    min-height: auto;
+    padding: 1rem;
+  }
+  
+  .roommate-card img {
+    height: auto;
+    max-height: 150px;
+    /* 超小屏幕图片优化 - 填满容器边框 */
+    object-fit: cover;
+    object-position: center;
+    /* 保持图片比例但填满容器 */
+    aspect-ratio: auto;
+  }
+  
+  /* 移动端卡片布局优化 */
+  .roommate-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .roommate-card .card-content {
+    width: 100%;
+  }
+  
+  /* 移动端图片容器优化 */
+  .roommate-card .relative.mb-4 {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto 1rem auto;
+    /* 确保图片容器与边框完美适配 */
+    border-radius: 0.75rem;
+    overflow: hidden;
+    /* 添加边框和阴影，与卡片风格一致 */
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 移动端图片完美适配容器边框 */
+  .roommate-card .relative.mb-4 img {
+    /* 确保图片完全填满容器 */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* 图片边框与容器边框完美重合 */
+    border-radius: inherit;
+    /* 移除图片自身的边框样式 */
+    border: none;
+    /* 确保图片无空白区域 */
+    display: block;
+  }
+}
+
+/* 趣味区响应式网格优化 */
+#fun-grid {
+    display: grid;
+    gap: 1rem;
+    align-items: start;
+}
+
+/* 响应式断点优化 */
+@media (min-width: 640px) {
+    #fun-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+@media (min-width: 768px) {
+    #fun-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    #fun-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    #fun-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+/* 趣味区卡片响应式优化 */
+#fun-grid a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 1px solid #F8E1E9;
+}
+
+#fun-grid a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+#fun-grid .w-14 {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+@media (max-width: 640px) {
+    #fun-grid .w-14 {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    #fun-grid a {
+        padding: 0.5rem;
+        gap: 0.25rem;
+    }
+}
+
+/* 左侧外链栏响应式优化 */
+@media (max-width: 1024px) {
+    #side-links {
+        display: none;
+    }
+}
+
+/* 弹窗响应式优化 */
+@media (max-width: 640px) {
+    .modal-content {
+        margin-top: 10%;
+        width: 95%;
+        padding: 1rem;
+    }
+    
+    .close-btn {
+        top: 0.5rem;
+        right: 0.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* 移动端边框重叠问题修复 */
+@media (max-width: 768px) {
+    /* 通话模块边框优化 */
+    #call-embed {
+        border-width: 1px !important;
+    }
+    
+    /* 今日舍规边框优化 */
+    .ai-dorm-leader {
+        border-width: 2px !important;
+        margin: 0.5rem;
+    }
+    
+    /* 确保内部元素有足够间距 */
+    .dialog-content {
+        margin: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* 超小屏幕进一步优化 */
+    .ai-dorm-leader {
+        border-width: 1px !important;
+        margin: 0.25rem;
+    }
+    
+    .dialog-content {
+        margin: 0.25rem;
+    }
+}
+
+/* 重构后的今日舍规样式 */
+.rules-container {
+    min-height: 300px;
+    position: relative;
+}
+
+.rules-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.rules-content {
+    position: relative;
+    z-index: 10;
+}
+
+.rules-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.rules-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #D4A5D6, #F8E1E9);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.leader-avatar img {
+    transition: all 0.3s ease;
+}
+
+.leader-avatar img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.rules-main {
+    position: relative;
+}
+
+/* 舍规项目样式 */
+.rule-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(248, 225, 233, 0.6));
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.rule-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 225, 233, 0.8));
+}
+
+.rule-item.forbidden {
+    border-left: 4px solid #ef4444;
+}
+
+.rule-item.suggestion {
+    border-left: 4px solid #f59e0b;
+}
+
+.rule-item i {
+    font-size: 1.25rem;
+    width: 2rem;
+    text-align: center;
+}
+
+.rule-item.forbidden i {
+    color: #ef4444;
+}
+
+.rule-item.suggestion i {
+    color: #f59e0b;
+}
+
+.rule-item span {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #374151;
+}
+
+/* 移动端舍规优化 */
+@media (max-width: 768px) {
+    .rules-container {
+        min-height: 250px;
+    }
+    
+    .rules-card {
+        padding: 1.5rem;
+    }
+    
+    .rule-item {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .rule-item i {
+        font-size: 1rem;
+        width: 1.5rem;
+    }
+    
+    .rule-item span {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .rules-container {
+        min-height: 200px;
+    }
+    
+    .rules-card {
+        padding: 1rem;
+    }
+    
+    .leader-avatar img {
+        width: 3rem !important;
+        height: 3rem !important;
+    }
+    
+    .rule-item {
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 0.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .rule-item i {
+        font-size: 1.125rem;
+        width: auto;
+    }
+    
+    .rule-item span {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+}
+
+/* 倒计时图标修复 - 防止拉伸 */
+.countdown-icon {
+    flex-shrink: 0;
+    width: 3.75rem; /* w-15 */
+    height: 3.75rem; /* h-15 */
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* 确保图片不被拉伸，保持1:1比例 */
+    aspect-ratio: 1;
+}
+
+
