@@ -1,0 +1,6 @@
+# Cloudflare Pages 重定向规则
+# 允许访问静态HTML文件
+/luya.html  /luya.html  200
+
+# 对于其他不存在的路径，重定向到index.html（SPA模式）
+/*  /index.html  200
