@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路亚人群基本数据 - 产品设计报告</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ECharts 核心库 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    
+    <!-- ECharts 中国地图 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+    
+    <!-- ECharts 词云插件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', "Microsoft YaHei", "Helvetica Neue", sans-serif;
+        }
+        /* ECharts 容器需要一个明确的高度 */
+        .chart-container {
+            width: 100%;
+            height: 350px;
+        }
+        /* 粒子画布特定样式 */
+        #particleCanvas {
+            width: 100%;
+            height: 100%; /* 高度占满父容器 */
+            min-height: 80px; /* 保证最小高度 */
+        }
+        .particle-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* 确保 canvas 不溢出 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 antialiased">
+
+    <!-- 页面容器 -->
+    <div class="container mx-auto max-w-5xl p-4 md:p-8 my-8 md:my-12">
+        
+        <!-- 页眉 -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">路亚人群基本数据 🎣</h1>
+            <p class="text-lg text-gray-600 mt-2">专业产品设计报告</p>
+        </header>
+
+        <!-- 核心结论 -->
+        <div class="bg-blue-800 text-white rounded-lg shadow-lg p-6 md:p-8 mb-10 text-center">
+            <h2 class="text-xl md:text-2xl font-semibold mb-3">核心结论</h2>
+            <p class="text-base md:text-lg opacity-90">
+                这是一个以中国城市年轻 (Z世代与千禧一代) 男性为主体、追求"解压"与"潮流社交"体验、并具有高环保意识和强装备升级意愿的群体。
+            </p>
+        </div>
+
+        <!-- 关键指标卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <!-- 卡片1: 群体规模 (静态点阵) -->
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 particle-card" style="height: 120px;">
+                <div class="flex-shrink-0">
+                    <span class="text-5xl">👥</span>
+                </div>
+                <div class="flex-1 h-full">
+                    <h3 class="text-lg font-semibold text-gray-500">群体规模</h3>
+                    <!-- 粒子动画画布 -->
+                    <canvas id="particleCanvas"></canvas>
+                    <p class="text-sm text-gray-600 -mt-2">中国钓鱼爱好者总数</p>
+                </div>
+            </div>
+            <!-- 卡片2: 经济画像 -->
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4" style="height: 120px;">
+                <div class="flex-shrink-0">
+                    <span class="text-5xl">💰</span>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-500">经济画像</h3>
+                    <p class="text-2xl md:text-3xl font-bold text-blue-700">城市中产阶级</p>
+                    <p class="text-sm text-gray-600">有可支配收入，视为生活方式投资</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 网格布局容器 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- 第一部分：核心人群画像 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">一、 核心人群画像 🧢</h2>
+                <p class="text-gray-600 mb-5 text-sm italic">这是您的目标用户是谁。</p>
+                <ul class="space-y-3 list-disc list-outside pl-5 text-gray-700">
+                    <li><strong>核心年龄:</strong> <span class="font-semibold text-red-600">25-44岁</span> 是主力，占总数 <span class="font-semibold text-red-600">46%</span>。</li>
+                    <li><strong>增长最快的群体:</strong> <span class="font-semibold text-red-600">Z世代 (18-26岁)</span>。26岁以下用户装备订单量 <span class="font-semibold text-red-600">4年增长近4倍</span>。</li>
+                    <li><strong>性别分布:</strong> 以男性为主，但 <span class="font-semibold text-blue-600">年轻女性</span> 是快速增长的新细分市场。</li>
+                </ul>
+            </div>
+
+            <!-- 第二部分：心理与动机画像 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">二、 心理与动机画像 🧠</h2>
+                <p class="text-gray-600 mb-5 text-sm italic">这是您的用户为什么购买和使用产品。</p>
+                <ul class="space-y-3 text-gray-700">
+                    <li>
+                        <h3 class="font-semibold text-blue-600">1. 解压与精神疗愈</h3>
+                        <p class="text-sm pl-4">"城市解压阀"，摆脱工作压力和数字疲劳。产品应传达"平静"与"专注"的情感价值。</p>
+                    </li>
+                    <li>
+                        <h3 class="font-semibold text-blue-600">2. 社交与潮流属性</h3>
+                        <p class="text-sm pl-4">被称为 <span class="font-semibold text-red-600">"水上高尔夫"</span>。活跃于抖音、小红书。产品需 <span class="font-semibold text-red-600">高颜值</span>，易于社交展示。</p>
+                    </li>
+                    <li>
+                        <h3 class="font-semibold text-blue-600">3. 环保意识："捕获与释放"</h3>
+                        <p class="text-sm pl-4">普遍遵循 <span class="font-semibold text-green-600">"Catch & Release"</span> (钓获后放流) 的核心价值观。</p>
+                    </li>
+                    <li>
+                        <h3 class="font-semibold text-blue-600">4. 追求探索与成就感</h3>
+                        <p class="text-sm pl-4">主动探索、抛投，带来即时成就感。产品应强调性能、操控感和"中鱼率"。</p>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 人群画像图表 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">人群画像 📊</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 年龄图表 -->
+                    <div id="ageChart" class="chart-container"></div>
+                    <!-- 性别图表 -->
+                    <div id="genderChart" class="chart-container"></div>
+                </div>
+            </div>
+
+            <!-- 第三部分：消费行为 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">三、 消费行为与市场趋势 🛒</h2>
+                <p class="text-gray-600 mb-5 text-sm italic">这是您的用户如何购买和使用产品。</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- 市场规模 -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-600 mb-2">市场规模</h3>
+                        <ul class="space-y-2 list-disc list-outside pl-5 text-sm text-gray-700">
+                            <li>中国钓具市场: <span class="font-semibold text-red-600">> 500亿 RMB</span> (2023)</li>
+                            <li>中国生产全球 <span class="font-semibold text-red-600">80%</span> 的钓具</li>
+                            <li>路亚装备市场: <span class="font-semibold text-red-600">~ 12亿 RMB</span> (2022)</li>
+                        </ul>
+                    </div>
+                    <!-- 购买渠道 -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-600 mb-2">购买渠道</h3>
+                        <ul class="space-y-2 list-disc list-outside pl-5 text-sm text-gray-700">
+                            <li><span class="font-semibold text-red-600">> 40%</span> 发生在线上电商</li>
+                            <li><span class="font-semibold text-red-600">> 40%</span> 销售受社交媒体 (KOL) 影响</li>
+                        </ul>
+                    </div>
+                    <!-- 消费习惯 -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-600 mb-2">消费习惯</h3>
+                        <ul class="space-y-2 list-disc list-outside pl-5 text-sm text-gray-700">
+                            <li>入门套装: <span class="font-semibold text-red-600">500 - 2000 RMB</span></li>
+                            <li><span class="font-semibold text-blue-600">升级意愿极强</span>，追求专业和高溢价</li>
+                            <li>偏好: 软饵 (38%) / 淡水路亚 (60-70%)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 消费行为图表 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">消费行为 📈</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 渠道图表 -->
+                    <div id="channelChart" class="chart-container"></div>
+                    <!-- 环境图表 -->
+                    <div id="envChart" class="chart-container"></div>
+                </div>
+            </div>
+
+            <!-- 地域分布 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">地域分布 🗺️</h2>
+                <p class="text-gray-600 mb-5 text-sm italic">数据显示，路亚人群主要集中在东部沿海、经济发达且水系丰富的省份。</p>
+                <!-- 地图图表 -->
+                <div id="mapChart" class="chart-container" style="height: 500px;"></div>
+            </div>
+
+            <!-- 消费洞察 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">消费洞察 💳</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 花费图表 -->
+                    <div id="spendingChart" class="chart-container"></div>
+                    <!-- 装备图表 -->
+                    <div id="equipmentChart" class="chart-container"></div>
+                </div>
+            </div>
+
+            <!-- 行为偏好 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">行为偏好 🌤️</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 季节图表 -->
+                    <div id="seasonChart" class="chart-container"></div>
+                    <!-- 时间图表 -->
+                    <div id="timeChart" class="chart-container"></div>
+                </div>
+            </div>
+
+            <!-- 兴趣与情绪 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden p-6 md:col-span-2">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">兴趣与情绪画像 📸</h2>
+                <p class="text-gray-600 mb-5 text-sm italic">路亚作为一种生活方式，与多种户外和潮流兴趣高度重叠，并满足用户的多重情绪价值。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 词云图表 -->
+                    <div id="interestCloudChart" class="chart-container"></div>
+                    <!-- 气泡图表 -->
+                    <div id="emotionBubbleChart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-gray-500 text-sm mt-10">
+            🐠 &copy; 709路亚服务设计部 - 内部参考资料 🐡
+        </footer>
+
+    </div>
+
+    <!-- ECharts 和 粒子动画 脚本 -->
+    <!-- 修正：将 type(text/javascript> 改为 type="text/javascript" -->
+    <script type="text/javascript">
+        // 确保 DOM 加载完成后再执行
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // --- ECharts 图表初始化 ---
+            
+            // 1. 核心年龄分布图
+            var ageChart = echarts.init(document.getElementById('ageChart'));
+            var ageOption = {
+                title: { text: '核心年龄分布', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c}%' },
+                legend: { orient: 'vertical', left: 'left' },
+                series: [{
+                    name: '年龄占比', type: 'pie', radius: '60%', center: ['50%', '60%'],
+                    data: [
+                        { value: 46, name: '25-44岁 (主力)' }, { value: 25, name: '18-24岁 (Z世代)' },
+                        { value: 19, name: '45岁+' }, { value: 10, name: '<18岁' }
+                    ],
+                    emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+                }]
+            };
+            ageChart.setOption(ageOption);
+
+            // 2. 性别分布图
+            var genderChart = echarts.init(document.getElementById('genderChart'));
+            var genderOption = {
+                title: { text: '性别分布', subtext: '女性群体正快速增长', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' }, subtextStyle: { color: '#555' } },
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c}%' },
+                legend: { orient: 'vertical', left: 'left' },
+                series: [{
+                    name: '性别占比', type: 'pie', radius: '60%', center: ['50%', '60%'],
+                    data: [ { value: 78, name: '男性' }, { value: 22, name: '女性' } ],
+                    emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+                }]
+            };
+            genderChart.setOption(genderOption);
+
+            // 3. 购买渠道图
+            var channelChart = echarts.init(document.getElementById('channelChart'));
+            var channelOption = {
+                title: { text: '主要购买渠道', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c}%' },
+                legend: { orient: 'vertical', left: 'left' },
+                series: [{
+                    name: '渠道占比', type: 'pie', radius: '60%', center: ['50%', '60%'],
+                    data: [ { value: 45, name: '线上电商' }, { value: 35, name: '线下专业店' }, { value: 20, name: '其他渠道' } ],
+                    emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+                }]
+            };
+            channelChart.setOption(channelOption);
+
+            // 4. 垂钓环境偏好图
+            var envChart = echarts.init(document.getElementById('envChart'));
+            var envOption = {
+                title: { text: '垂钓环境偏好', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c}%' },
+                legend: { orient: 'vertical', left: 'left' },
+                series: [{
+                    name: '环境占比', type: 'pie', radius: '60%', center: ['50%', '60%'],
+                    data: [ { value: 65, name: '淡水路亚' }, { value: 35, name: '海水路亚' } ],
+                    emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+                }]
+            };
+            envChart.setOption(envOption);
+
+            // 5. 地域分布热力图
+            var mapChart = echarts.init(document.getElementById('mapChart'));
+            var mapData = [
+                {name: '广东', value: 1000}, {name: '江苏', value: 950}, {name: '浙江', value: 900},
+                {name: '山东', value: 800}, {name: '四川', value: 750}, {name: '湖北', value: 700},
+                {name: '上海', value: 680}, {name: '北京', value: 650}, {name: '福建', value: 600},
+                {name: '辽宁', value: 550}, {name: '湖南', value: 500}, {name: '河南', value: 450},
+                {name: '河北', value: 400}, {name: '安徽', value: 380}, {name: '江西', value: 360},
+                {name: '重庆', value: 340}, {name: '陕西', value: 320}, {name: '黑龙江', value: 300},
+                {name: '天津', value: 280}, {name: '吉林', value: 260}, {name: '广西', value: 240},
+                {name: '云南', value: 220}, {name: '山西', value: 200}, {name: '贵州', value: 180},
+                {name: '内蒙古', value: 160}, {name: '甘肃', value: 140}, {name: '海南', value: 120},
+                {name: '新疆', value: 100}, {name: '宁夏', value: 80}, {name: '青海', value: 60},
+                {name: '西藏', value: 40}, {name: '南海诸岛', value: 0}
+            ];
+            var mapOption = {
+                title: { text: '路亚人群地域分布热力图', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item', formatter: '{b}: {c} (热度指数)' },
+                visualMap: {
+                    min: 0, max: 1000, left: 'left', top: 'bottom', text: ['高', '低'],
+                    calculable: true, inRange: { color: ['#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695'] },
+                    textStyle: { color: '#333' }
+                },
+                series: [{
+                    name: '路亚热度', type: 'map', map: 'china', roam: true, label: { show: false },
+                    emphasis: { label: { show: true, color: '#000' }, itemStyle: { areaColor: '#fde047' } },
+                    data: mapData
+                }]
+            };
+            mapChart.setOption(mapOption);
+
+            // 6. 年花费区间 (水平条形图)
+            var spendingChart = echarts.init(document.getElementById('spendingChart'));
+            var spendingOption = {
+                title: { text: '年花费区间', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{b} : {c}%' },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: { type: 'value', boundaryGap: [0, 0.01], axisLabel: { formatter: '{value}%' } },
+                yAxis: { type: 'category', data: ['> 10000元', '5000-10000元', '3000-5000元', '1000-3000元', '< 1000元'] },
+                series: [{
+                    name: '占比', type: 'bar', data: [5, 15, 25, 40, 15],
+                    itemStyle: { color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [ { offset: 0, color: '#83bff6' }, { offset: 1, color: '#188df0' } ]) }
+                }]
+            };
+            spendingChart.setOption(spendingOption);
+
+            // 7. 装备套数 (水平条形图)
+            var equipmentChart = echarts.init(document.getElementById('equipmentChart'));
+            var equipmentOption = {
+                title: { text: '装备套数', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{b} : {c}%' },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: { type: 'value', boundaryGap: [0, 0.01], axisLabel: { formatter: '{value}%' } },
+                yAxis: { type: 'category', data: ['5套以上 (发烧友)', '3-5套 (进阶)', '1-2套 (新手)'] },
+                series: [{
+                    name: '占比', type: 'bar', data: [15, 55, 30],
+                    itemStyle: { color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [ { offset: 0, color: '#5470c6' }, { offset: 1, color: '#91cc75' } ]) }
+                }]
+            };
+            equipmentChart.setOption(equipmentOption);
+
+            // 8. 出钓首选季节 (环形图)
+            var seasonChart = echarts.init(document.getElementById('seasonChart'));
+            var seasonData = [ { value: 100, name: '秋季' }, { value: 90, name: '夏季' }, { value: 85, name: '春季' }, { value: 30, name: '冬季' } ];
+            var seasonOption = {
+                title: { text: '出钓首选季节', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c} (热度)' },
+                legend: { orient: 'vertical', left: 'left' },
+                series: [{
+                    name: '季节偏好', type: 'pie', radius: ['45%', '70%'], center: ['50%', '60%'],
+                    avoidLabelOverlap: false, label: { show: false, position: 'center' },
+                    emphasis: { label: { show: true, fontSize: '20', fontWeight: 'bold' } },
+                    labelLine: { show: false }, data: seasonData
+                }]
+            };
+            seasonChart.setOption(seasonOption);
+
+            // 9. 出钓首选时段 (雷达图)
+            var timeChart = echarts.init(document.getElementById('timeChart'));
+            var timeOption = {
+                title: { text: '出钓首选时段', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item' },
+                legend: { data: ['时段偏好'], bottom: 5 },
+                radar: {
+                    indicator: [
+                        { name: '清晨 (04-07)', max: 100 }, { name: '上午 (08-11)', max: 100 },
+                        { name: '中午 (12-14)', max: 100 }, { name: '下午 (15-17)', max: 100 },
+                        { name: '傍晚 (18-20)', max: 100 }, { name: '夜晚 (21-03)', max: 100 }
+                    ],
+                    radius: '60%'
+                },
+                series: [{
+                    name: '出钓时段偏好', type: 'radar',
+                    data: [ { value: [95, 70, 40, 65, 90, 50], name: '时段偏好' } ]
+                }]
+            };
+            timeChart.setOption(timeOption);
+
+            // 10. 兴趣标签词云
+            var interestCloudChart = echarts.init(document.getElementById('interestCloudChart'));
+            var wordData = [
+                { name: '户外 🏕️', value: 100 }, { name: '露营', value: 95 }, { name: '自驾 🚙', value: 90 },
+                { name: '摄影 📷', value: 85 }, { name: '装备党', value: 80 }, { name: '潮流', value: 75 },
+                { name: 'Vlog', value: 65 }, { name: '徒步 🏞️', value: 60 }, { name: '飞盘', value: 50 },
+                { name: '无人机', value: 45 }, { name: '美食 🍳', value: 40 }, { name: '旅行', value: 70 }
+            ];
+            var interestCloudOption = {
+                title: { text: '兴趣标签词云', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { show: true, formatter: '{b}: {c} (热度)' },
+                series: [{
+                    type: 'wordCloud', gridSize: 15, sizeRange: [15, 60], rotationRange: [-45, 45],
+                    shape: 'diamond',
+                    textStyle: {
+                        color: function() {
+                            return 'rgb(' + [
+                                Math.round(Math.random() * 160) + 50,
+                                Math.round(Math.random() * 160) + 50,
+                                Math.round(Math.random() * 160) + 50
+                            ].join(',') + ')';
+                        }
+                    },
+                    emphasis: { textStyle: { shadowBlur: 10, shadowColor: '#333' } },
+                    data: wordData
+                }]
+            };
+            interestCloudChart.setOption(interestCloudOption);
+
+            // 11. 情绪画像语义泡泡
+            var emotionBubbleChart = echarts.init(document.getElementById('emotionBubbleChart'));
+            var emotionData = [
+                { name: '治愈 (解压)', value: [50, 50, 100] }, { name: '社交 (潮流)', value: [75, 70, 85] },
+                { name: '竞技 (挑战)', value: [25, 30, 70] }, { name: '探索未知', value: [20, 10, 45] },
+                { name: '成就感', value: [15, 65, 60] }, { name: '逃离都市', value: [40, 80, 55] },
+                { name: '专注', value: [60, 20, 50] }, { name: '装备炫耀', value: [85, 45, 60] },
+                { name: '亲近自然', value: [35, 90, 48] }, { name: '静心', value: [65, 85, 42] },
+                { name: '分享交流', value: [90, 20, 52] }, { name: '自由自在', value: [10, 40, 47] }
+            ];
+            var emotionBubbleOption = {
+                title: { text: '情绪画像：语义泡泡', left: 'center', textStyle: { color: '#333', fontWeight: 'bold' } },
+                tooltip: { trigger: 'item', formatter: '{b}' },
+                xAxis: { type: 'value', show: false, splitLine: { show: false }, min: 0, max: 100 },
+                yAxis: { type: 'value', show: false, splitLine: { show: false }, min: 0, max: 100 },
+                series: [{
+                    name: '情绪画像', type: 'scatter', symbol: 'circle',
+                    symbolSize: function(data) { return data[2]; },
+                    data: emotionData.map(item => ({ name: item.name, value: item.value })),
+                    itemStyle: {
+                        color: function(params) {
+                            var colors = ['#f3a683', '#57b7a6', '#54a0ff', '#e17055', '#0984e3', '#fd79a8', '#6c5ce7', '#00b894', '#ffbe76', '#a4b0be', '#f0932b', '#badc58', '#dff9fb'];
+                            return colors[params.dataIndex % colors.length];
+                        },
+                        opacity: 0.8, shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)'
+                    },
+                    label: {
+                        show: true,
+                        formatter: '{b}',
+                        fontSize: function(params) {
+                            var size = params.value[2];
+                            if (size > 80) return 16;
+                            if (size > 60) return 14;
+                            return 12;
+                        },
+                        fontWeight: 'bold', color: '#fff',
+                        textShadowBlur: 2, textShadowColor: 'rgba(0, 0, 0, 0.3)'
+                    },
+                    emphasis: { focus: 'item', itemStyle: { opacity: 1 }, label: { fontSize: 16 } }
+                }]
+            };
+            emotionBubbleChart.setOption(emotionBubbleOption);
+
+            
+            // --- 静态点阵 ---
+            let particleCtx = null;
+            let particleCanvas = null;
+
+            function initParticleAnimation() {
+                particleCanvas = document.getElementById('particleCanvas');
+                if (!particleCanvas) return;
+                particleCtx = particleCanvas.getContext('2d');
+
+                const dpr = window.devicePixelRatio || 1;
+                const rect = particleCanvas.getBoundingClientRect();
+                
+                if (!rect.width || !rect.height) {
+                    console.error("画布尺寸无效，无法初始化粒子。");
+                    return;
+                }
+                
+                particleCanvas.width = rect.width * dpr;
+                particleCanvas.height = rect.height * dpr;
+                particleCtx.scale(dpr, dpr);
+                
+                const logicalWidth = rect.width;
+                const logicalHeight = rect.height;
+                
+                const text = '1.6亿';
+                const fontSize = logicalHeight * 0.7; // 字体大小
+                particleCtx.font = `bold ${fontSize}px 'Inter', sans-serif`;
+                particleCtx.fillStyle = '#1d4ed8'; // 仅用于扫描
+                particleCtx.textAlign = 'center';
+                particleCtx.textBaseline = 'middle';
+                particleCtx.fillText(text, logicalWidth / 2, logicalHeight / 2);
+
+                const textData = particleCtx.getImageData(0, 0, particleCanvas.width, particleCanvas.height).data;
+                particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+                // 绘制静态粒子
+                particleCtx.fillStyle = '#1d4ed8'; // 设置粒子的颜色
+                const step = 4; // 扫描步长
+                for (let y = 0; y < particleCanvas.height; y += step) {
+                    for (let x = 0; x < particleCanvas.width; x += step) {
+                        const index = (y * particleCanvas.width + x) * 4;
+                        const alpha = textData[index + 3];
+                        if (alpha > 128) {
+                            // 绘制一个点
+                            particleCtx.beginPath();
+                            particleCtx.arc(x / dpr, y / dpr, 1, 0, Math.PI * 2); // 1px大小的圆点
+                            particleCtx.fill();
+                        }
+                    }
+                }
+            }
+            // --- End 静态点阵 ---
+
+            // 首次加载
+            try {
+                initParticleAnimation();
+            } catch (e) {
+                console.error("粒子动画初始化失败:", e);
+                // 失败时的后备
+                const canvas = document.getElementById('particleCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    const dpr = window.devicePixelRatio || 1;
+                    const rect = canvas.getBoundingClientRect();
+                    canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+                    ctx.scale(dpr, dpr);
+                    ctx.font = `bold ${rect.height * 0.7}px 'Inter', sans-serif`;
+                    ctx.fillStyle = '#1d4ed8';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('1.6亿', rect.width / 2, rect.height / 2);
+                }
+            }
+            
+            // 监听窗口大小变化，使图表自适应
+            const allCharts = [ageChart, genderChart, channelChart, envChart, mapChart, spendingChart, equipmentChart, seasonChart, timeChart, interestCloudChart, emotionBubbleChart];
+
+            window.addEventListener('resize', function() {
+                // 重置 ECharts
+                allCharts.forEach(chart => chart.resize());
+                
+                // 重新初始化粒子动画
+                try {
+                    initParticleAnimation(); 
+                } catch(e) {
+                     console.error("粒子动画调整大小失败:", e);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
