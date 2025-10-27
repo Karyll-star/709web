@@ -1,376 +1,331 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>709寝室宇宙</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'milk-pink': '#FFD1DC',
-                        'mint-green': '#B5EAD7',
-                        'sakura-white': '#FFF8F5',
-                        'bright-yellow': '#FFF247',
-                        'jelly-purple': '#D8B4FE',
-                    },
-                    fontFamily: {
-                        'noto': ['Noto Sans JP', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>709寝室宇宙</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%8F%A0%3C/text%3E%3C/svg%3E">
 </head>
-<body class="font-noto bg-sakura-white overflow-x-hidden relative">
-    <!-- 动态波浪背景 -->
-    <div class="fixed inset-0 -z-10 overflow-hidden">
-        <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-wave1"></div>
-        <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave2"></div>
-        <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-wave3"></div>
-    </div>
+<body style="font-family: 'Noto Sans JP', sans-serif; background-color: #FFF8F2; overflow-x: hidden;" class="relative">
+  <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-wave1"></div>
+    <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave2"></div>
+    <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-wave3"></div>
+  </div>
 
-    <!-- 艺术导航栏 -->
-    <nav class="relative bg-gradient-to-r from-mint-green via-milk-pink/30 to-jelly-purple/40 shadow-2xl sticky top-0 z-50 backdrop-blur-lg overflow-hidden">
-        <!-- 装饰性背景元素 -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-10 -left-10 w-20 h-20 bg-bright-yellow/20 rounded-full animate-pulse"></div>
-            <div class="absolute -top-5 -right-5 w-16 h-16 bg-jelly-purple/20 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-            <div class="absolute top-1/2 left-1/4 w-8 h-8 bg-milk-pink/30 rounded-full animate-bounce" style="animation-delay: 2s;"></div>
-            <div class="absolute top-1/3 right-1/3 w-6 h-6 bg-bright-yellow/40 rounded-full animate-bounce" style="animation-delay: 0.5s;"></div>
+  <!-- 响应式导航栏 -->
+  <nav style="background-color: #98FB98;" class="bg-gradient-to-r from-transparent via-white/10 to-transparent shadow-lg sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 sm:px-5 flex justify-between items-center h-15">
+      <div class="flex items-center gap-2 sm:gap-2.5 font-bold text-lg sm:text-xl text-gray-800">
+        <i class="fas fa-home" style="color: #F8E1E9;" class="animate-bounce"></i>
+        <span class="hidden sm:inline">709寝室宇宙</span>
+        <span class="sm:hidden">709</span>
+      </div>
+      
+      <!-- 桌面端导航 -->
+      <div class="hidden md:flex gap-3 lg:gap-5">
+        <a href="#roommates" class="nav-link">舍友一览</a>
+        <a href="#pets" class="nav-link">宠物窝</a>
+        <a href="#fun" class="nav-link">趣味区</a>
+        <a href="#call" class="nav-link">通话模块</a>
+        <a href="#rules" class="nav-link">今日舍规</a>
+        <a href="#countdown" class="nav-link">节日倒计时</a>
+      </div>
+      
+      <!-- 移动端菜单按钮 -->
+      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors">
+        <i class="fas fa-bars text-gray-800"></i>
+      </button>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-white/20">
+      <div class="flex flex-col gap-1 p-4">
+        <a href="#roommates" class="mobile-nav-link">舍友一览</a>
+        <a href="#pets" class="mobile-nav-link">宠物窝</a>
+        <a href="#fun" class="mobile-nav-link">趣味区</a>
+        <a href="#call" class="mobile-nav-link">通话模块</a>
+        <a href="#rules" class="mobile-nav-link">今日舍规</a>
+        <a href="#countdown" class="mobile-nav-link">节日倒计时</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 左侧外链圆形图标栏（响应式显示） -->
+  <div id="side-links" class="hidden lg:flex fixed left-4 top-1/2 -translate-y-1/2 z-40 flex-col items-center gap-4">
+    <a href="https://news.karyll.cn/" target="_blank" rel="noopener" class="group flex flex-col items-center gap-1">
+      <div class="w-12 h-12 rounded-full bg-white/90 border-2 flex items-center justify-center shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl" style="border-color: #D4A5D6;">
+        <i class="fas fa-newspaper" style="color: #D4A5D6;"></i>
+      </div>
+      <span class="text-xs text-gray-700 bg-white/80 px-2 py-0.5 rounded-lg shadow">新闻</span>
+    </a>
+    <a href="https://trend.karyll.xn--6qq986b3xl/" target="_blank" rel="noopener" class="group flex flex-col items-center gap-1">
+      <div class="w-12 h-12 rounded-full bg-white/90 border-2 flex items-center justify-center shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl" style="border-color: #98FB98;">
+        <i class="fas fa-fire" style="color: #98FB98;"></i>
+      </div>
+      <span class="text-xs text-gray-700 bg-white/80 px-2 py-0.5 rounded-lg shadow">热报</span>
+    </a>
+    <a href="https://tv.karyll.xn--6qq986b3xl/" target="_blank" rel="noopener" class="group flex flex-col items-center gap-1">
+      <div class="w-12 h-12 rounded-full bg-white/90 border-2 flex items-center justify-center shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl" style="border-color: #F8E1E9;">
+        <i class="fas fa-film" style="color: #F8E1E9;"></i>
+      </div>
+      <span class="text-xs text-gray-700 bg-white/80 px-2 py-0.5 rounded-lg shadow">电影</span>
+    </a>
+    <a href="https://img.karyll.xn--6qq986b3xl/" target="_blank" rel="noopener" class="group flex flex-col items-center gap-1">
+      <div class="w-12 h-12 rounded-full bg-white/90 border-2 flex items-center justify-center shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl" style="border-color: #FFD700;">
+        <i class="fas fa-image" style="color: #FFD700;"></i>
+      </div>
+      <span class="text-xs text-gray-700 bg-white/80 px-2 py-0.5 rounded-lg shadow">图库</span>
+    </a>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 sm:py-10">
+    <!-- 舍友一览 - 响应式网格 -->
+    <section id="roommates" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+      <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
+        <span class="relative">舍友一览</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">バカ！</span>
+        <i class="fas fa-hammer" style="color: #FFD700;" class="animate-bounce"></i>
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 justify-items-center items-stretch">
+        
+        <div class="roommate-card w-full max-w-sm sm:max-w-md lg:w-80 flex flex-col min-h-[320px] sm:min-h-[380px] h-full rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer" data-roommate="被子">
+          <div class="relative mb-4">
+            <img src="https://img.karyll.xn--6qq986b3xl/file/1755417203305_刘智睿.jpg" alt="乌蒙舍友" class="w-full h-auto object-cover rounded-xl sm:rounded-2xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer roommate-image">
+            <div class="absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 bg-black/60 text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded text-xs sm:text-sm date-watermark">2024.01.15</div>
+          </div>
+          <div class="flex-1 flex flex-col justify-start card-info">
+            <h3 class="text-lg sm:text-xl mb-2 sm:mb-2.5 text-gray-800">刘智睿</h3>
+            <p class="text-gray-600 mb-2 sm:mb-2.5 italic status text-sm sm:text-base">状态：睡眠</p>
+            <div class="flex flex-wrap gap-2 sm:gap-4 mb-4 power-stats">
+              <span style="background-color: #D4A5D6;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">战斗力: 5</span>
+              <span style="background-color: #D4A5D6;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">摸鱼指数: 9</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border-l-4" style="border-color: #98FB98;" class="italic text-gray-600 card-quote">
+            <p class="text-sm sm:text-base">"呼呼呼"</p>
+          </div>
+        </div>
+
+        <div class="roommate-card w-full max-w-sm sm:max-w-md lg:w-80 flex flex-col min-h-[320px] sm:min-h-[380px] h-full rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer" data-roommate="宠物">
+          <div class="relative mb-4">
+            <img src="https://img.karyll.xn--6qq986b3xl/file/1755417206098_杨林涣.jpg" alt="第二位舍友" class="w-full h-auto object-cover rounded-xl sm:rounded-2xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer roommate-image">
+            <div class="absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 bg-black/60 text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded text-xs sm:text-sm date-watermark">2024.01.16</div>
+          </div>
+          <div class="flex-1 flex flex-col justify-start card-info">
+            <h3 class="text-lg sm:text-xl mb-2 sm:mb-2.5 text-gray-800">杨林涣</h3>
+            <p class="text-gray-600 mb-2 sm:mb-2.5 italic status text-sm sm:text-base">状态：拍打洗衣机</p>
+            <div class="flex flex-wrap gap-2 sm:gap-4 mb-4 power-stats">
+              <span style="background-color: #98FB98;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">战斗力: 8</span>
+              <span style="background-color: #98FB98;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">摸鱼指数: 6</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border-l-4" style="border-color: #D4A5D6;" class="italic text-gray-600 card-quote">
+            <p class="text-sm sm:text-base">"乌蒙！"</p>
+          </div>
         </div>
         
-        <!-- 波浪装饰 -->
-        <div class="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+        <div class="roommate-card w-full max-w-sm sm:max-w-md lg:w-80 flex flex-col min-h-[320px] sm:min-h-[380px] h-full rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer" data-roommate="爹">
+          <div class="relative mb-4">
+            <img src="https://img.karyll.xn--6qq986b3xl/file/1755417203422_周兴.jpg" alt="第三位舍友" class="w-full h-auto object-cover rounded-xl sm:rounded-2xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer roommate-image">
+            <div class="absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 bg-black/60 text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded text-xs sm:text-sm date-watermark">2024.01.17</div>
+          </div>
+          <div class="flex-1 flex flex-col justify-start card-info">
+            <h3 class="text-lg sm:text-xl mb-2 sm:mb-2.5 text-gray-800">周兴</h3>
+            <p class="text-gray-600 mb-2 sm:mb-2.5 italic status text-sm sm:text-base">状态：全能战士</p>
+            <div class="flex flex-wrap gap-2 sm:gap-4 mb-4 power-stats">
+              <span style="background-color: #73d0e6;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">智商: 10</span>
+              <span style="background-color: #73d0e6;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">运气指数: 10</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border-l-4" style="border-color: #FFD700;" class="italic text-gray-600 card-quote">
+            <p class="text-sm sm:text-base">"宿舍公认的爹"</p>
+          </div>
+        </div>
+
+        <div class="roommate-card w-full max-w-sm sm:max-w-md lg:w-80 flex flex-col min-h-[320px] sm:min-h-[380px] h-full rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer" data-roommate="空军">
+          <div class="relative mb-4">
+            <img src="https://img.karyll.xn--6qq986b3xl/file/1755417200020_贾昊凝.jpg" alt="第四位舍友" class="w-full h-auto object-cover rounded-xl sm:rounded-2xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer roommate-image">
+            <div class="absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 bg-black/60 text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded text-xs sm:text-sm date-watermark">2024.01.18</div>
+          </div>
+          <div class="flex-1 flex flex-col justify-start card-info">
+            <h3 class="text-lg sm:text-xl mb-2 sm:mb-2.5 text-gray-800">贾昊凝</h3>
+            <p class="text-gray-600 mb-2 sm:mb-2.5 italic status text-sm sm:text-base">状态:钓鱼ing</p>
+            <div class="flex flex-wrap gap-2 sm:gap-4 mb-4 power-stats">
+              <span style="background-color: #FFD700;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">战斗力: 10</span>
+              <span style="background-color: #FFD700;" class="text-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">空军指数: 10</span>
+            </div>
+          </div>
+          <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border-l-4" style="border-color: #F8E1E9;" class="italic text-gray-600 card-quote">
+            <p class="text-sm sm:text-base">"你怎么知道我又钓一条大鱼？"</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    
+    <!-- 宠物窝 - 响应式布局 -->
+    <section id="pets" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+      <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
+        <span class="relative">宠物窝</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">にゃあ！</span>
+      </h2>
+      <div class="relative min-h-[300px] sm:min-h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-10" style="background: linear-gradient(to bottom right, #98FB98, #F8E1E9);">
+        <div class="absolute inset-0 pointer-events-none room-decoration">
+          <div class="absolute bottom-5 left-5 w-12 h-16 sm:w-15 sm:h-20 bg-gradient-to-br from-red-400 to-cyan-400 rounded transform -rotate-15 manga-books"></div>
+          <div class="absolute bottom-10 right-7.5 w-8 h-12 sm:w-10 sm:h-15 bg-gradient-to-br from-yellow-300 to-red-400 rounded-2xl transform rotate-10 snack-bag"></div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-6 sm:gap-10 justify-between">
+          <div class="flex-1 min-w-0 bg-white/70 rounded-2xl shadow-lg p-4 sm:p-8 relative pet-block">
+            <div style="color: #D4A5D6;" class="text-lg sm:text-xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-2.5 tracking-wider block-title">
+              <i class="fas fa-fish"></i> 鱼缸
+            </div>
+            <div class="fish-tank relative w-full max-w-xs sm:w-80 h-40 sm:h-50 mx-auto mb-6 sm:mb-7.5 rounded-[40%_40%_50%_50%/60%_60%_40%_40%] shadow-2xl overflow-hidden z-10" style="background: linear-gradient(to bottom, rgba(98, 245, 152, 0.6), #87CEEB); border: 4px solid white;">
+              <div class="absolute inset-0 bottom-0 h-full w-full z-10 pointer-events-none water" style="background: linear-gradient(to bottom, rgba(98, 245, 152, 0.6), #87CEEB); opacity: 0.85;"></div>
+              <div class="swim-fish absolute w-10 h-6 sm:w-12 sm:h-7 z-20 will-change-transform pointer-events-auto transition-all duration-500" id="fish1" data-pet="fish1" data-real="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80">
+                <div class="fish-body absolute w-6 h-4 sm:w-8 sm:h-5 left-2 top-1 shadow-lg rounded-[50%_60%_60%_50%/60%_60%_40%_40%]" style="background: linear-gradient(to right, rgba(248, 225, 233, 0.6), #98FB98);"></div>
+                <div class="fish-tail absolute right-0 top-2 w-3.5 h-2.5 sm:w-4.5 sm:h-3 transform -rotate-20 animate-tail-swing rounded-[60%_40%_60%_40%/60%_60%_40%_40%]" style="background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.6), #D4A5D6);"></div>
+                <div class="fish-eye absolute left-3.5 sm:left-4.5 top-2 sm:top-2.5 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-gray-800 rounded-full shadow-[0_0_0_2px_#fff]"></div>
+              </div>
+              <div class="swim-fish absolute w-10 h-6 sm:w-12 sm:h-7 z-20 will-change-transform pointer-events-auto transition-all duration-500" id="fish2" data-pet="fish2" data-real="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80">
+                <div class="fish-body absolute w-6 h-4 sm:w-8 sm:h-5 left-2 top-1 shadow-lg rounded-[50%_60%_60%_50%/60%_60%_40%_40%]" style="background: linear-gradient(to right, rgba(248, 225, 233, 0.6), #98FB98);"></div>
+                <div class="fish-tail absolute right-0 top-2 w-3.5 h-2.5 sm:w-4.5 sm:h-3 transform -rotate-20 animate-tail-swing rounded-[60%_40%_60%_40%/60%_60%_40%_40%]" style="background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.6), #D4A5D6);"></div>
+                <div class="fish-eye absolute left-3.5 sm:left-4.5 top-2 sm:top-2.5 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-gray-800 rounded-full shadow-[0_0_0_2px_#fff]"></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0 bg-white/70 rounded-2xl shadow-lg p-4 sm:p-8 relative plant-block">
+            <div style="color: #D4A5D6;" class="text-lg sm:text-xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-2.5 tracking-wider block-title">
+              <i class="fas fa-seedling"></i> 植物区
+            </div>
+            <div class="flex justify-center items-end gap-10 sm:gap-15 relative plant-container">
+              <div class="plant plant-grass" data-plant="grass1" data-real="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=400&q=80">
+                <div class="plant-sticker w-16 h-16 sm:w-22.5 sm:h-22.5 rounded-full flex items-center justify-center shadow-lg border-4 border-white mb-2.5 relative animate-bounce" style="background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.6), #D4A5D6);">
+                  <div class="pet-face relative w-full h-full flex justify-center items-center">
+                    <div class="eyes absolute top-[38%] left-0 w-full flex justify-around z-20">
+                      <div class="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 bg-gray-800 rounded-full shadow-[0_0_0_3px_#fff] animate-blink"></div>
+                      <div class="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 bg-gray-800 rounded-full shadow-[0_0_0_3px_#fff] animate-blink"></div>
+                    </div>
+                    <div class="cheeks absolute bottom-[28%] left-0 w-full flex justify-around z-10">
+                      <div class="w-3 h-2 sm:w-4 sm:h-2.5 bg-pink-300 rounded-full opacity-70 blur-sm"></div>
+                      <div class="w-3 h-2 sm:w-4 sm:h-2.5 bg-pink-300 rounded-full opacity-70 blur-sm"></div>
+                    </div>
+                    <div class="paws absolute bottom-[8%] left-0 w-full flex justify-around z-20">
+                      <div class="w-2.5 h-3 sm:w-3 sm:h-4 bg-white rounded-full border-2 border-pink-300 shadow-[0_2px_4px_#ffd1dc88]"></div>
+                      <div class="w-2.5 h-3 sm:w-3 sm:h-4 bg-white rounded-full border-2 border-pink-300 shadow-[0_2px_4px_#ffd1dc88]"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="plant-quote text-center mt-1.5 text-teal-600 text-sm sm:text-base font-medium bg-white/80 rounded-xl px-3 py-1 shadow-lg">元气草1号</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 趣味区 - 响应式网格 -->
+    <section id="fun" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+      <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
+        <span class="relative">趣味区</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">たのしい！</span>
+      </h2>
+      <p class="text-gray-600 mb-6 text-sm sm:text-base">收集一些有意思的网站，随便逛逛～</p>
+      <div id="fun-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5"></div>
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <button id="fun-prev" class="px-3 py-1.5 rounded-xl text-sm bg-white/80 border shadow hover:shadow-md transition" style="border-color:#D4A5D6;">上一页</button>
+        <button id="fun-next" class="px-3 py-1.5 rounded-xl text-sm bg-white/80 border shadow hover:shadow-md transition" style="border-color:#D4A5D6;">下一页</button>
+      </div>
+    </section>
+
+    <!-- 通话模块 - 响应式布局 -->
+    <section id="call" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+      <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6 text-2xl sm:text-4xl font-bold text-gray-800">
+        <span class="relative">通话模块</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">みんな話そう！</span>
+        <i class="fas fa-phone-volume" style="color: #FFD700;" class="animate-bounce"></i>
+      </h2>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-5 mb-4 sm:mb-5">
+        <p class="text-gray-600 text-sm sm:text-base">使用内置的 MiroTalk CME 进行实时语音/视频通话。</p>
+        <div class="flex items-center gap-3">
+          <button style="background-color: #FFD700;" class="px-3 py-2 text-gray-900 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm" onclick="toggleFullscreenById('call-embed')">
+            全屏/退出
+          </button>
+        </div>
+      </div>
+      <div id="call-embed" class="relative w-full rounded-xl sm:rounded-2xl border-2 overflow-hidden shadow-xl" style="border-color: #D4A5D6; background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.4), rgba(248, 225, 233, 0.4));">
+        <div class="w-full pt-[56.25%]"></div>
+        <iframe allow="camera; microphone; fullscreen; clipboard-read; clipboard-write; web-share; autoplay" src="https://cme.mirotalk.com/" class="absolute inset-0 w-full h-full" style="border:0"></iframe>
+      </div>
+    </section>
+
+    <!-- 今日舍规 - 重构布局 -->
+    <section id="rules" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+      <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
+        <span class="relative">今日舍规</span>
+        <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">きをつけてね～</span>
+      </h2>
+      
+      <!-- 重构后的舍规布局 -->
+      <div class="rules-container relative">
+        <!-- 背景装饰 -->
+        <div class="rules-bg absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden" style="background: linear-gradient(135deg, #D4A5D6, #F8E1E9);">
+          <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-4 left-4 w-16 h-16 rounded-full bg-white/30"></div>
+            <div class="absolute bottom-4 right-4 w-20 h-20 rounded-full bg-white/20"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-white/10"></div>
+          </div>
+        </div>
         
-        <div class="max-w-7xl mx-auto px-6 py-4 relative">
-            <!-- 主标题区域 -->
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div class="flex items-center gap-3 group">
-                    <div class="relative">
-                        <div class="w-12 h-12 bg-gradient-to-br from-milk-pink to-jelly-purple rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                            <i class="fas fa-home text-white text-lg"></i>
-                        </div>
-                        <div class="absolute -inset-1 bg-gradient-to-br from-milk-pink to-jelly-purple rounded-full opacity-30 blur-sm group-hover:opacity-50 transition-opacity duration-300"></div>
-                    </div>
-                    <div class="flex flex-col">
-                        <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                            709寝室宇宙
-                        </h1>
-                        <p class="text-sm text-gray-600 font-medium">宇宙级寝室管理系统</p>
-                    </div>
-                </div>
-                
-                <!-- 导航菜单 -->
-                <div class="flex flex-wrap gap-2 lg:gap-3">
-                    <a href="#roommates" class="nav-link-enhanced group">
-                        <i class="fas fa-users text-mint-green group-hover:text-white transition-colors duration-300"></i>
-                        <span>舍友一览</span>
-                        <div class="nav-link-bg"></div>
-                    </a>
-                    <a href="#pets" class="nav-link-enhanced group">
-                        <i class="fas fa-paw text-mint-green group-hover:text-white transition-colors duration-300"></i>
-                        <span>宠物窝</span>
-                        <div class="nav-link-bg"></div>
-                    </a>
-                    <a href="#rules" class="nav-link-enhanced group">
-                        <i class="fas fa-scroll text-mint-green group-hover:text-white transition-colors duration-300"></i>
-                        <span>今日舍规</span>
-                        <div class="nav-link-bg"></div>
-                    </a>
-                    <a href="#countdown" class="nav-link-enhanced group">
-                        <i class="fas fa-clock text-mint-green group-hover:text-white transition-colors duration-300"></i>
-                        <span>节日倒计时</span>
-                        <div class="nav-link-bg"></div>
-                    </a>
-                    <a href="路亚.html" class="nav-link-enhanced group">
-                        <span class="text-lg">🐟🎣</span>
-                        <span>路亚数据</span>
-                        <div class="nav-link-bg"></div>
-                    </a>
-
-                </div>
+        <!-- 主要内容区域 -->
+        <div class="rules-content relative z-10 p-6 sm:p-8 lg:p-10">
+          <div class="rules-card bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-10 border-2 border-white/50">
+            <!-- 头像和标题行 -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <div class="leader-avatar flex-shrink-0">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80" 
+                     alt="AI舍长" 
+                     class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full shadow-2xl border-4 border-white/80" 
+                     style="background-color: #98FB98;">
+              </div>
+              <div class="text-center sm:text-left">
+                <h3 style="color: #D4A5D6;" class="text-xl sm:text-2xl lg:text-3xl font-bold mb-2">AI舍长</h3>
+                <p class="text-gray-600 text-sm sm:text-base">今日舍规发布者</p>
+              </div>
             </div>
+            
+            <!-- 舍规内容 -->
+            <div class="rules-main">
+              <h4 style="color: #D4A5D6;" class="text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 text-center sm:text-left">今日舍规</h4>
+              <div class="rules-list">
+                <!-- 舍规内容将通过JavaScript动态渲染 -->
+              </div>
+            </div>
+          </div>
         </div>
-    </nav>
+      </div>
+    </section>
 
-    <!-- 主要内容区域 -->
-    <main class="max-w-6xl mx-auto px-5 py-10">
-        <!-- 舍友一览模块 -->
-        <section id="roommates" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 mb-15">
-            <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800 mb-8">
-                <span class="relative">舍友一览</span>
-                <span class="text-base text-bright-yellow bg-jelly-purple px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">バカ！</span>
-                <i class="fas fa-hammer text-bright-yellow animate-bounce"></i>
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center items-stretch">
-                <!-- 社恐 -->
-                <div class="roommate-card w-80 max-w-[95vw] flex flex-col min-h-[380px] h-full bg-milk-pink rounded-2xl p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer hover:-translate-y-2.5 hover:rotate-1 hover:shadow-2xl" data-roommate="社恐">
-                    <div class="relative mb-4">
-                        <img src="https://img.karyll.xn--6qq986b3xl/file/1755417206098_杨林涣.jpg" alt="乌蒙舍友" class="w-full h-50 object-cover rounded-xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl roommate-image">
-                        <div class="absolute bottom-2.5 right-2.5 bg-black/60 text-white px-2.5 py-1.5 rounded text-sm date-watermark">2024.01.15</div>
-                        <div class="absolute top-2.5 right-2.5 w-5 h-5 bg-bright-yellow clip-polygon animate-pulse star-effect"></div>
-                    </div>
-                    <div class="flex-1 flex flex-col justify-start card-info">
-                        <h3 class="text-xl mb-2.5 text-gray-800">杨林涣</h3>
-                        <p class="text-gray-600 mb-2.5 italic status">状态：乌蒙痴</p>
-                        <div class="flex gap-4 mb-4 power-stats">
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">战斗力: 5</span>
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">摸鱼指数: 9</span>
-                        </div>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-mint-green italic text-gray-600 card-quote">
-                        <p>"乌蒙。。嘿嘿嘿。。乌蒙"</p>
-                    </div>
-                </div>
+    <!-- 节日倒计时 - 响应式网格 -->
+    <section id="countdown" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+      <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
+        <span class="relative">节日倒计时</span>
+      </h2>
+      <div id="countdown-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8"></div>
+    </section>
+  </main>
 
-                <!-- 摸鱼 -->
-                <div class="roommate-card w-80 max-w-[95vw] flex flex-col min-h-[380px] h-full bg-milk-pink rounded-2xl p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer hover:-translate-y-2.5 hover:rotate-1 hover:shadow-2xl" data-roommate="摸鱼">
-                    <div class="relative mb-4">
-                        <img src="https://img.karyll.xn--6qq986b3xl/file/1755417203305_刘智睿.jpg" alt="摸鱼舍友" class="w-full h-50 object-cover rounded-xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl roommate-image">
-                        <div class="absolute bottom-2.5 right-2.5 bg-black/60 text-white px-2.5 py-1.5 rounded text-sm date-watermark">2024.01.15</div>
-                        <div class="absolute top-2.5 right-2.5 w-5 h-5 bg-bright-yellow clip-polygon animate-pulse star-effect"></div>
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-bright-yellow animate-bounce opacity-80 zzz-effect">zzz</div>
-                    </div>
-                    <div class="flex-1 flex flex-col justify-start card-info">
-                        <h3 class="text-xl mb-2.5 text-gray-800">刘智睿</h3>
-                        <p class="text-gray-600 mb-2.5 italic status">状态：假装在工作</p>
-                        <div class="flex gap-4 mb-4 power-stats">
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">战斗力: 3</span>
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">摸鱼指数: 10</span>
-                        </div>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-mint-green italic text-gray-600 card-quote">
-                        <p>"我在工作...真的..."</p>
-                    </div>
-                </div>
-
-                <!-- 学霸 -->
-                <div class="roommate-card w-80 max-w-[95vw] flex flex-col min-h-[380px] h-full bg-milk-pink rounded-3xl p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer hover:-translate-y-2.5 hover:rotate-1 hover:shadow-2xl" data-roommate="学霸">
-                    <div class="relative mb-4">
-                        <img src="https://img.karyll.xn--6qq986b3xl/file/1755417203422_周兴.jpg" alt="修仙舍友" class="w-full h-50 object-cover rounded-xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl roommate-image">
-                        <div class="absolute bottom-2.5 right-2.5 bg-black/60 text-white px-2.5 py-1.5 rounded text-sm date-watermark">2024.01.15</div>
-                        <div class="absolute top-2.5 right-2.5 w-5 h-5 bg-bright-yellow clip-polygon animate-pulse star-effect"></div>
-                    </div>
-                    <div class="flex-1 flex flex-col justify-start card-info">
-                        <h3 class="text-xl mb-2.5 text-gray-800">周兴</h3>
-                        <p class="text-gray-600 mb-2.5 italic status">状态：深夜修仙</p>
-                        <div class="flex gap-4 mb-4 power-stats">
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">战斗力: 8</span>
-                            <span class="hatsune-miku text-white px-2.5 py-1.5 rounded-xl text-sm">摸鱼指数: 2</span>
-                        </div>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-mint-green italic text-gray-600 card-quote">
-                        <p>"夜晚才是我的主场"</p>
-                    </div>
-                </div>
-
-                <!-- 夜猫 -->
-                <div class="roommate-card w-80 max-w-[95vw] flex flex-col min-h-[380px] h-full bg-milk-pink rounded-3xl p-5 shadow-xl transition-all duration-300 relative overflow-hidden cursor-pointer hover:-translate-y-2.5 hover:rotate-1 hover:shadow-2xl" data-roommate="夜猫">
-                    <div class="relative mb-4">
-                        <img src="https://img.karyll.xn--6qq986b3xl/file/1755417200020_贾昊凝.jpg" alt="钓鱼舍友" class="w-full h-50 object-cover rounded-xl border-3 border-white shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl roommate-image">
-                        <div class="absolute bottom-2.5 right-2.5 bg-black/60 text-white px-2.5 py-1.5 rounded text-sm date-watermark">2024.01.15</div>
-                        <div class="absolute top-2.5 right-2.5 w-5 h-5 bg-bright-yellow clip-polygon animate-pulse star-effect"></div>
-                    </div>
-                    <div class="flex-1 flex flex-col justify-start card-info">
-                        <h3 class="text-xl mb-2.5 text-gray-800">贾昊凝</h3>
-                        <p class="text-gray-600 mb-2.5 italic status">状态：空军中</p>
-                        <div class="flex gap-4 mb-4 power-stats">
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">战斗力: 7</span>
-                            <span class="bg-jelly-purple text-white px-2.5 py-1.5 rounded-xl text-sm">摸鱼指数: 6</span>
-                        </div>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-mint-green italic text-gray-600 card-quote">
-                        <p>"你怎么知道我刚钓了一条大鱼？"</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- 通话模块 -->
-        <section id="call" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20">
-            <h2 class="flex items-center gap-4 mb-6 text-4xl font-bold text-gray-800">
-                <span class="relative">通话模块</span>
-                <span class="text-base text-bright-yellow bg-jelly-purple px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">みんな話そう！</span>
-                <i class="fas fa-phone-volume text-bright-yellow animate-bounce"></i>
-            </h2>
-            <div class="flex items-center justify-between mb-5">
-                <p class="text-gray-600 text-sm md:text-base">使用内置的 MiroTalk CME 进行实时语音/视频通话。</p>
-                <div class="flex items-center gap-3">
-                    <button class="px-3 py-2 bg-jelly-purple text-white rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
-                            onclick="openInNewTab('https://cme.mirotalk.com/')">
-                        新窗口打开
-                    </button>
-                    <button class="px-3 py-2 bg-bright-yellow text-gray-900 rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
-                            onclick="toggleFullscreenById('call-embed')">
-                        全屏/退出
-                    </button>
-                </div>
-            </div>
-            <div id="call-embed" class="relative w-full rounded-2xl border-2 border-jelly-purple overflow-hidden shadow-xl bg-gradient-to-br from-mint-green/40 to-milk-pink/40">
-                <div class="w-full pt-[56.25%]"></div>
-                <iframe
-                    allow="camera; microphone; fullscreen; clipboard-read; clipboard-write; web-share; autoplay"
-                    src="https://cme.mirotalk.com/"
-                    class="absolute inset-0 w-full h-full"
-                    style="border:0"
-                    allowfullscreen
-                ></iframe>
-            </div>
-        </section>
-        <!-- 宠物窝模块 -->
-        <section id="pets" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 mb-15">
-            <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800 mb-8">
-                <span class="relative">宠物窝</span>
-                <span class="text-base text-bright-yellow bg-jelly-purple px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">にゃあ！</span>
-            </h2>
-            <div class="relative min-h-[400px] bg-gradient-to-br from-mint-green to-milk-pink rounded-3xl overflow-hidden">
-                <div class="absolute inset-0 pointer-events-none room-decoration">
-                    <div class="absolute bottom-5 left-5 w-15 h-20 bg-gradient-to-br from-red-400 to-cyan-400 rounded transform -rotate-15 manga-books"></div>
-                    <div class="absolute bottom-10 right-7.5 w-10 h-15 bg-gradient-to-br from-yellow-300 to-red-400 rounded-2xl transform rotate-10 snack-bag"></div>
-                </div>
-                <div class="flex flex-wrap gap-10 justify-between mt-10">
-                    <!-- 鱼缸区 -->
-                    <div class="flex-1 min-w-[350px] bg-white/70 rounded-2xl shadow-lg p-8 mx-2.5 relative pet-block">
-                        <div class="text-xl font-bold text-jelly-purple mb-6 flex items-center gap-2.5 tracking-wider block-title">
-                            <i class="fas fa-fish"></i> 鱼缸
-                        </div>
-                        <div class="fish-tank relative w-80 h-50 mx-auto mb-7.5 bg-gradient-to-b from-mint-green/60 to-blue-300/100 rounded-[40%_40%_50%_50%/60%_60%_40%_40%] shadow-2xl shadow-mint-green/40 overflow-hidden border-6 border-white z-10">
-                            <div class="absolute inset-0 bottom-0 h-full w-full bg-gradient-to-b from-mint-green/60 to-blue-300/100 opacity-85 z-10 pointer-events-none water"></div>
-                            <div class="swim-fish absolute w-12 h-7 z-20 will-change-transform pointer-events-auto transition-all duration-500" id="fish1" data-pet="fish1" data-real="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80">
-                                <div class="fish-body absolute w-8 h-5 bg-gradient-to-r from-milk-pink/60 to-mint-green/100 rounded-[50%_60%_60%_50%/60%_60%_40%_40%] left-2 top-1 shadow-lg shadow-mint-green/40"></div>
-                                <div class="fish-tail absolute right-0 top-2 w-4.5 h-3 bg-gradient-to-br from-mint-green/60 to-jelly-purple/100 rounded-[60%_40%_60%_40%/60%_60%_40%_40%] transform -rotate-20 animate-tail-swing"></div>
-                                <div class="fish-eye absolute left-4.5 top-2.5 w-1.5 h-1.5 bg-gray-800 rounded-full shadow-[0_0_0_2px_#fff]"></div>
-                            </div>
-                            <div class="swim-fish absolute w-12 h-7 z-20 will-change-transform pointer-events-auto transition-all duration-500" id="fish2" data-pet="fish2" data-real="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80">
-                                <div class="fish-body absolute w-8 h-5 bg-gradient-to-r from-milk-pink/60 to-mint-green/100 rounded-[50%_60%_60%_50%/60%_60%_40%_40%] left-2 top-1 shadow-lg shadow-mint-green/40"></div>
-                                <div class="fish-tail absolute right-0 top-2 w-4.5 h-3 bg-gradient-to-br from-mint-green/60 to-jelly-purple/100 rounded-[60%_60%_40%_40%] transform -rotate-20 animate-tail-swing"></div>
-                                <div class="fish-eye absolute left-4.5 top-2.5 w-1.5 h-1.5 bg-gray-800 rounded-full shadow-[0_0_0_2px_#fff]"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 植物区 -->
-                    <div class="flex-1 min-w-[350px] bg-white/70 rounded-2xl shadow-lg p-8 mx-2.5 relative plant-block">
-                        <div class="text-xl font-bold text-jelly-purple mb-6 flex items-center gap-2.5 tracking-wider block-title">
-                            <i class="fas fa-seedling"></i> 植物区
-                        </div>
-                        <div class="flex justify-center items-end gap-15 relative plant-container">
-                            <div class="plant plant-grass" data-plant="grass1" data-real="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=400&q=80">
-                                <div class="plant-sticker w-22.5 h-22.5 bg-gradient-to-br from-mint-green/60 to-jelly-purple/100 rounded-full flex items-center justify-center shadow-lg shadow-gray-400/30 border-4 border-white mb-2.5 relative animate-bounce">
-                                    <div class="pet-face relative w-full h-full flex justify-center items-center">
-                                        <div class="eyes absolute top-[38%] left-0 w-full flex justify-around z-20">
-                                            <div class="w-4.5 h-4.5 bg-gray-800 rounded-full shadow-[0_0_0_3px_#fff] animate-blink"></div>
-                                            <div class="w-4.5 h-4.5 bg-gray-800 rounded-full shadow-[0_0_0_3px_#fff] animate-blink"></div>
-                                        </div>
-                                        <div class="cheeks absolute bottom-[28%] left-0 w-full flex justify-around z-10">
-                                            <div class="w-4 h-2.5 bg-pink-300 rounded-full opacity-70 blur-sm"></div>
-                                            <div class="w-4 h-2.5 bg-pink-300 rounded-full opacity-70 blur-sm"></div>
-                                        </div>
-                                        <div class="paws absolute bottom-[8%] left-0 w-full flex justify-around z-20">
-                                            <div class="w-3 h-4 bg-white rounded-full border-2 border-pink-300 shadow-[0_2px_4px_#ffd1dc88]"></div>
-                                            <div class="w-3 h-4 bg-white rounded-full border-2 border-pink-300 shadow-[0_2px_4px_#ffd1dc88]"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="plant-quote text-center mt-1.5 text-teal-600 text-base font-medium bg-white/80 rounded-xl px-3 py-1 shadow-lg shadow-gray-400/30">元气草1号</div>
-                            </div>
-                            <div class="plant plant-grass" data-plant="grass2" data-real="https://img.karyll.xn--6qq986b3xl/file/1755417496861_卡通仙人掌.png">
-                                <div class="plant-sticker w-22.5 h-22.5 bg-gradient-to-br from-mint-green/60 to-jelly-purple/100 rounded-full flex items-center justify-center shadow-lg shadow-gray-400/30 border-4 border-white mb-2.5 relative animate-bounce">
-                                    <div class="pet-face relative w-full h-full flex justify-center items-center">
-                                        <div class="eyes absolute top-[38%] left-0 w-full flex justify-around z-20">
-                                            <div class="w-4.5 h-4.5 bg-gray-800 rounded-full shadow-[0_0_0_3px_#fff] animate-blink"></div>
-                                            <div class="w-4.5 h-4.5 bg-gray-800 rounded-full shadow-[0_0_0_3px_#fff] animate-blink"></div>
-                                        </div>
-                                        <div class="cheeks absolute bottom-[28%] left-0 w-full flex justify-around z-10">
-                                            <div class="w-4 h-2.5 bg-pink-300 rounded-full opacity-70 blur-sm"></div>
-                                            <div class="w-4 h-2.5 bg-pink-300 rounded-full opacity-70 blur-sm"></div>
-                                        </div>
-                                        <div class="paws absolute bottom-[8%] left-0 w-full flex justify-around z-20">
-                                            <div class="w-3 h-4 bg-white rounded-full border-2 border-pink-300 shadow-[0_2px_4px_#ffd1dc88]"></div>
-                                            <div class="w-3 h-4 bg-white rounded-full border-2 border-pink-300 shadow-[0_2px_4px_#ffd1dc88]"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="plant-quote text-center mt-1.5 text-teal-600 text-base font-medium bg-white/80 rounded-xl px-3 py-1 shadow-lg shadow-gray-400/30">元气草2号</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 今日舍规模块 -->
-        <section id="rules" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 mb-15">
-            <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800 mb-8">
-                <span class="relative">今日舍规</span>
-                <span class="text-base text-bright-yellow bg-jelly-purple px-2.5 py-1.5 rounded-2xl opacity-80 animate-pulse">きをつけてね～</span>
-            </h2>
-            <div class="flex items-center justify-center gap-10 py-10 bg-gradient-to-r from-jelly-purple to-milk-pink rounded-[30px] shadow-2xl relative min-h-[340px] mb-10">
-                <div class="ai-dorm-leader flex items-center gap-10 bg-white/95 p-10 rounded-[30px] shadow-2xl shadow-jelly-purple/40 relative min-w-[420px] min-h-[220px] z-20 border-4 border-bright-yellow animate-pulse">
-                    <div class="leader-avatar">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80" alt="AI舍长" class="w-30 h-30 rounded-full border-6 border-milk-pink shadow-2xl shadow-jelly-purple/20 bg-mint-green">
-                    </div>
-                    <div class="leader-dialog flex-1 relative text-xl text-gray-800">
-                        <div class="dialog-content bg-gradient-to-r from-sakura-white/60 to-milk-pink/100 p-7.5 pl-10 rounded-3xl shadow-lg shadow-gray-400/30 border-l-8 border-jelly-purple text-lg">
-                            <h3 class="text-2xl text-jelly-purple mb-4.5 text-shadow-lg">今日舍规</h3>
-                            <div class="rules-list gap-4.5">
-                                <!-- 由JS动态插入今日舍规 -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 节日倒计时模块 -->
-        <section id="countdown" class="mb-15 p-8 bg-white/80 rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 mb-15">
-            <h2 class="flex items-center gap-4 mb-8 text-4xl font-bold text-gray-800 mb-8">
-                <span class="relative">节日倒计时</span>
-            </h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="countdown-item bg-milk-pink p-6 rounded-3xl flex items-center gap-5 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
-                    <div class="countdown-icon flex-shrink-0">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=60&h=60&q=80" alt="初音未来日" class="w-15 h-15 rounded-full border-3 border-white shadow-lg shadow-gray-400/30">
-                    </div>
-                    <div class="countdown-info flex-1">
-                        <h3 class="mb-2.5 text-gray-800 text-xl">初音未来日</h3>
-                        <div class="countdown-timer flex gap-2.5 text-lg font-bold text-jelly-purple" data-date="2024-03-09">
-                            <span class="days bg-white px-2.5 py-1.5 rounded-lg min-w-10 text-center shadow-lg shadow-gray-400/30">00</span>天
-                            <span class="hours bg-white px-2.5 py-1.5 rounded-lg min-w-10 text-center shadow-lg shadow-gray-400/30">00</span>时
-                            <span class="minutes bg-white px-2.5 py-1.5 rounded-lg min-w-10 text-center shadow-lg shadow-gray-400/30">00</span>分
-                        </div>
-                    </div>
-                </div>
-                <div class="countdown-item bg-milk-pink p-6 rounded-3xl flex items-center gap-5 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
-                    <div class="countdown-icon flex-shrink-0">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=60&h=60&q=80" alt="寝室内裤日" class="w-15 h-15 rounded-full border-3 border-white shadow-lg shadow-gray-400/30">
-                    </div>
-                    <div class="countdown-info flex-1">
-                        <h3 class="mb-2.5 text-gray-800 text-xl">寝室内裤日</h3>
-                        <div class="countdown-timer flex gap-2.5 text-lg font-bold text-jelly-purple" data-date="2024-02-14">
-                            <span class="days bg-white px-2.5 py-1.5 rounded-lg min-w-10 text-center shadow-lg shadow-gray-400/30">00</span>天
-                            <span class="hours bg-white px-2.5 py-1.5 rounded-lg min-w-10 text-center shadow-lg shadow-gray-400/30">00</span>时
-                            <span class="minutes bg-white px-2.5 py-1.5 rounded-lg min-w-10 text-center shadow-lg shadow-gray-400/30">00</span>分
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- 弹窗组件 -->
-    <div id="modal" class="hidden fixed inset-0 z-[2000] bg-black/50 backdrop-blur-sm">
-        <div class="modal-content bg-sakura-white mx-auto mt-[5%] p-8 rounded-3xl w-[90%] max-w-[500px] relative shadow-2xl shadow-gray-400/60 border-2 border-jelly-purple">
-            <span class="close-btn absolute top-4 right-5 text-xl cursor-pointer text-jelly-purple font-bold transition-all duration-300 hover:text-red-500 hover:scale-110">逃げる！</span>
-            <div class="modal-body"></div>
-        </div>
+  <!-- 弹窗系统 -->
+  <div id="modal" class="hidden fixed inset-0 z-[2000] bg-black/50 backdrop-blur-sm">
+    <div class="modal-content mx-auto mt-[5%] p-4 sm:p-8 rounded-2xl sm:rounded-3xl w-[95%] sm:w-[90%] max-w-[500px] relative shadow-2xl overflow-hidden" style="background-color: #FFF8F2; border: 2px solid #D4A5D6;">
+      <span class="close-btn absolute top-3 right-4 sm:top-4 sm:right-5 text-lg sm:text-xl cursor-pointer" style="color: #D4A5D6;" class="font-bold transition-all duration-300 hover:text-red-500 hover:scale-110">逃げる！</span>
+      <div class="modal-body"></div>
     </div>
+  </div>
 
-    <!-- 音效和动画脚本 -->
-    <script src="script.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
-</html> 
+</html>
