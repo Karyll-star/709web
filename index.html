@@ -367,5 +367,32 @@
 
   <script type="module" src="/src/background.js"></script>
   <script type="module" src="/src/main.js"></script>
+  <!-- Live2D 看板娘 (手动配置版) -->
+  <!-- 1. 加载 CSS -->
+  <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu.css">
+  
+  <!-- 2. 加载核心库 -->
+  <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
+  <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.js"></script>
+  
+  <!-- 3. 初始化配置 -->
+  <script>
+    // 等待页面加载完成
+    window.addEventListener('load', () => {
+      // 初始化看板娘
+      initWidget({
+        waifuPath: "https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.json",
+        // 使用 fghrsh 的 API (拥有大量模型)
+        cdnPath: "https://live2d.fghrsh.net/api/", 
+        
+        // --- 关键配置 ---
+        modelId: 1,    // 模型 ID (1: Miku, 2: Epsilon, 3: GFL ... 试试修改这个数字!)
+        texturesId: 1, // 材质/服装 ID
+        
+        // 工具栏设置
+        tools: ["hitokoto", "asteroids", "switch-model", "switch-texture", "photo", ],
+      });
+    });
+  </script>
 </body>
 </html>
