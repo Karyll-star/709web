@@ -885,6 +885,15 @@ body {
     /* 二次元波点背景纹理 */
     background-image: radial-gradient(var(--sakura-pink) 1px, transparent 1px);
     background-size: 20px 20px;
+    
+    /* 自定义光标 - 默认状态 */
+    /* 请确保 嘻嘻.gif 位于 public 目录下 */
+    cursor: url('/嘻嘻.gif'), auto; 
+}
+
+/* 链接和按钮的自定义指针 - 通常使用同一张图或者变体 */
+a, button, .cursor-pointer, .roommate-card {
+    cursor: url('/嘻嘻.gif'), pointer;
 }
 
 /* 覆盖原来的 canvas 样式，确保它在最底层且不遮挡点击 */
@@ -1140,7 +1149,8 @@ nav {
    ----------------------------------------- */
 #waifu {
     z-index: 100 !important; /* 确保在背景之上 */
-    left: 20px !important;
+    left: auto !important;   /* 清除左侧定位 */
+    right: 20px !important;  /* 设置右侧定位 */
     bottom: 10px !important;
 }
 

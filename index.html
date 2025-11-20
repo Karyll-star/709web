@@ -379,14 +379,26 @@
   <script>
     // 等待页面加载完成
     window.addEventListener('load', () => {
+      // --- 强制重置模型 ---
+      // 清除浏览器缓存的用户选择，确保 modelId 生效
+      localStorage.removeItem('modelId');
+      localStorage.removeItem('modelTexturesId');
+      
       // 初始化看板娘
       initWidget({
         waifuPath: "https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.json",
-        // 使用 fghrsh 的 API (拥有大量模型)
-        cdnPath: "https://live2d.fghrsh.net/api/", 
+        // 更换为更稳定的静态源 (GitHub CDN)
+        cdnPath: "https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/", 
         
         // --- 关键配置 ---
-        modelId: 1,    // 模型 ID (1: Miku, 2: Epsilon, 3: GFL ... 试试修改这个数字!)
+        // 尝试修改 modelId:
+        // 0: 药水制作师 (Potion Maker)
+        // 1: 你的名字 (Bilibili)
+        // 2: 黑猫 (Black Cat)
+        // 3: 白猫 (White Cat)
+        // 4: 初音未来 (Miku)
+        // 5: 也就是 shizuku
+        modelId: 2,    
         texturesId: 1, // 材质/服装 ID
         
         // 工具栏设置
