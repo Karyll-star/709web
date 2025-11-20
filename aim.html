@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS瞄准训练网站 - AIM TRAINER</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6366f1',
+            dark: '#0f172a',
+            surface: '#1e293b',
+          },
+          animation: {
+            'pop-in': 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      overflow: hidden;
+      cursor: none; /* 隐藏默认光标 */
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #0f172a;
+      color: white;
+      user-select: none;
+    }
+
+    /* 自定义准星层 */
+    #crosshair-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    
+    /* Target Styles */
+    .target {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: none; /* 命中检测是手动处理的 */
+      will-change: transform;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+      transform-style: preserve-3d;
+    }
+    
+    .target::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.2);
+      transform: translateZ(-1px) scale(0.9);
+      filter: blur(10px);
+    }
+    
+    .target img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      clip-path: circle(50% at 50% 50%);
+      display: block;
+    }
+
+    /* Animations */
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Particle System */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      transform-origin: center;
+    }
+
+    /* HUD & UI */
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Score Popup */
+    .score-float {
+      position: absolute;
+      font-weight: 900;
+      font-size: 24px;
+      color: #fbbf24; /* 琥珀色-400 */
+      pointer-events: none;
+      z-index: 50;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      animation: floatUp 0.8s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+    }
+
+    /* Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: #334155;
+      height: 6px;
+      border-radius: 3px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #6366f1;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Background Grid */
+    .bg-grid {
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 准星（跟随鼠标） -->
+  <div id="crosshair-layer">
+    <svg id="cursor-svg" width="40" height="40" viewBox="0 0 40 40"></svg>
+  </div>
+
+  <!-- Game World -->
+  <div id="game-container" class="relative w-full h-screen hidden">
+    <!-- 背景 -->
+    <div class="absolute inset-0 bg-grid pointer-events-none"></div>
+    
+    <!-- 目标与粒子层 -->
+    <div id="world-layer" class="absolute inset-0 overflow-hidden"></div>
+    
+    <!-- HUD -->
+    <div id="hud-layer" class="absolute inset-0 pointer-events-none p-6">
+      <!-- 左上角：分数 -->
+      <div class="absolute top-6 left-6 flex flex-col items-start">
+        <div class="flex items-center gap-4">
+          <div class="glass-panel px-5 py-3 rounded-xl flex flex-col items-center min-w-[120px]">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-bold">得分</span>
+            <span id="hud-score" class="text-3xl font-black text-white transition-transform duration-100">0</span>
+          </div>
+          <button id="btn-pause-game" class="bg-slate-700/80 hover:bg-slate-600 text-white w-12 h-12 rounded-full font-bold flex items-center justify-center transition-all hover:scale-110 shadow-lg backdrop-blur-sm border border-white/10 pointer-events-auto">
+            <i class="fa fa-pause text-lg"></i>
+          </button>
+        </div>
+        <!-- 分数弹出出现在此处，相对于父元素 -->
+        <div id="score-feedback-area" class="relative w-full h-0 mt-2"></div>
+      </div>
+
+      <!-- 右上角：准确率 -->
+      <div class="absolute top-6 right-6">
+        <div class="glass-panel px-5 py-3 rounded-xl flex flex-col items-center min-w-[120px]">
+          <span class="text-xs text-gray-400 uppercase tracking-wider font-bold">准确率</span>
+          <span id="hud-accuracy" class="text-3xl font-black text-white">100%</span>
+        </div>
+      </div>
+
+      <!-- 中央：计时器 -->
+      <div class="absolute top-6 left-1/2 -translate-x-1/2">
+         <div class="glass-panel px-6 py-2 rounded-full">
+            <span id="hud-timer" class="text-2xl font-mono font-bold">60</span>
+         </div>
+      </div>
+
+      <!-- 大倒计时覆盖层 -->
+      <div id="start-countdown" class="absolute inset-0 flex items-center justify-center bg-black/60 z-50 hidden">
+        <div id="countdown-number" class="text-9xl font-black text-white animate-pulse">3</div>
+      </div>
+
+      <!-- 暂停菜单 -->
+      <div id="pause-screen" class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 hidden pointer-events-auto">
+        <div class="text-center">
+          <h2 class="text-5xl font-bold mb-8 text-white tracking-widest">已暂停</h2>
+          <div class="flex flex-col gap-4">
+            <button id="btn-resume" class="bg-emerald-500 hover:bg-emerald-600 text-white px-12 py-3 rounded-full font-bold text-xl transition-all hover:scale-105">
+              继续游戏
+            </button>
+            <button id="btn-quit" class="bg-slate-700 hover:bg-slate-600 text-white px-12 py-3 rounded-full font-bold text-xl transition-all hover:scale-105">
+              返回菜单
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 游戏结束屏幕 -->
+      <div id="game-over-screen" class="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 hidden pointer-events-auto">
+        <div class="text-center max-w-2xl">
+          <h2 class="text-5xl font-bold mb-2 text-white">训练结束</h2>
+          
+          <!-- 准确率等级评价 -->
+          <div id="accuracy-rank" class="my-8 p-6 glass-panel rounded-2xl">
+            <p class="text-gray-400 text-sm mb-1">你的评价</p>
+            <h3 id="rank-title" class="text-3xl font-bold mb-3">评价加载中...</h3>
+            <p id="rank-description" class="text-gray-300 mb-4">评价描述加载中...</p>
+            <div class="w-full bg-slate-700 rounded-full h-2.5">
+              <div id="accuracy-bar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-8 my-8">
+            <div class="text-right">
+              <p class="text-gray-400 text-sm">最终得分</p>
+              <p id="end-score" class="text-4xl font-bold text-primary">0</p>
+            </div>
+            <div class="text-left">
+              <p class="text-gray-400 text-sm">准确率</p>
+              <p id="end-accuracy" class="text-4xl font-bold text-emerald-400">0%</p>
+            </div>
+          </div>
+          
+          <div class="flex gap-4 justify-center">
+            <button id="btn-restart" class="bg-primary hover:bg-indigo-500 text-white px-8 py-3 rounded-full font-bold text-lg transition-transform hover:scale-105">
+              再来一次
+            </button>
+            <button id="btn-settings" class="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-full font-bold text-lg transition-transform hover:scale-105">
+              返回设置
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置面板 -->
+  <div id="settings-panel" class="flex h-screen w-full">
+    
+    <!-- 左侧：预览窗格 -->
+    <div class="hidden lg:flex lg:w-1/2 bg-slate-900 relative items-center justify-center border-r border-slate-800">
+      <div class="bg-grid absolute inset-0 opacity-30"></div>
+      
+      <div class="relative z-10 text-center">
+        <h2 class="text-2xl font-bold mb-8 text-slate-400">效果预览</h2>
+        
+        <!-- 预览框 -->
+        <div class="relative w-[400px] h-[400px] bg-slate-800 rounded-xl border border-slate-700 shadow-2xl overflow-hidden mx-auto cursor-none group">
+          <!-- 预览网格 -->
+          <div class="absolute inset-0 bg-grid opacity-50"></div>
+          
+          <!-- 目标预览（居中） -->
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+             <div id="preview-target-container" class="transition-all duration-300">
+               <img id="preview-target-img" src="" class="w-full h-full object-cover" style="clip-path: circle(50%);">
+             </div>
+          </div>
+
+          <!-- 准星预览（在该框内跟随鼠标） -->
+          <div id="preview-cursor-layer" class="absolute inset-0 pointer-events-none">
+             <svg id="preview-cursor-svg" width="40" height="40" viewBox="0 0 40 40" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></svg>
+          </div>
+        </div>
+
+        <p class="mt-4 text-slate-500 text-sm">将鼠标悬停在框内以测试准星效果</p>
+      </div>
+    </div>
+
+    <!-- 右侧：控制项 -->
+    <div class="w-full lg:w-1/2 bg-slate-950 p-6 lg:p-10 overflow-y-auto">
+      <div class="flex flex-col items-start mb-6">
+        <a href="index.html" class="mb-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
+          <i class="fa fa-home"></i> 回寝室
+        </a>
+        <h1 class="text-4xl font-black text-white">AIM TRAINER</h1>
+      </div>
+      <p class="text-slate-400 mb-10">自定义你的训练环境</p>
+
+      <!-- 区域：准星 -->
+      <div class="mb-10">
+        <h3 class="text-primary font-bold uppercase tracking-wider mb-4 text-sm">准星设置</h3>
+        
+        <div class="grid grid-cols-4 gap-3 mb-6">
+          <button class="p-3 bg-slate-800 rounded-lg hover:bg-slate-700 border border-transparent focus:border-primary btn-crosshair" data-type="dot">圆点</button>
+          <button class="p-3 bg-slate-800 rounded-lg hover:bg-slate-700 border border-transparent focus:border-primary btn-crosshair" data-type="circle">圆圈</button>
+          <button class="p-3 bg-slate-800 rounded-lg hover:bg-slate-700 border border-transparent focus:border-primary btn-crosshair" data-type="cross">十字</button>
+          <button class="p-3 bg-slate-800 rounded-lg hover:bg-slate-700 border border-transparent focus:border-primary btn-crosshair" data-type="tshape">T型</button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between mb-2 text-sm">
+              <label>大小</label>
+              <span id="val-cursor-size">10px</span>
+            </div>
+            <input type="range" id="in-cursor-size" min="4" max="50" value="10" class="w-full">
+          </div>
+          
+          <div>
+             <div class="flex justify-between mb-2 text-sm">
+               <label>颜色 & 透明度</label>
+             </div>
+             <div class="flex gap-4">
+               <input type="color" id="in-cursor-color" value="#00ff00" class="h-10 w-14 bg-transparent border-0 p-0 cursor-pointer">
+               <input type="range" id="in-cursor-alpha" min="0.1" max="1" step="0.1" value="1" class="flex-1">
+             </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-2 text-sm">
+              <label>灵敏度 (Sensitivity)</label>
+              <span id="val-cursor-sensitivity">1.0</span>
+            </div>
+            <input type="range" id="in-cursor-sensitivity" min="0.1" max="5.0" step="0.1" value="1.0" class="w-full">
+          </div>
+        </div>
+      </div>
+
+      <!-- 区域：目标 -->
+      <div class="mb-10">
+        <h3 class="text-secondary font-bold uppercase tracking-wider mb-4 text-sm text-rose-500">目标设置</h3>
+        
+        <div class="flex gap-4 mb-6">
+          <button class="w-12 h-12 rounded-full bg-red-500 border-4 border-slate-800 ring-2 ring-transparent ring-offset-2 ring-offset-slate-900 focus:ring-white btn-target-color" data-color="red"></button>
+          <button class="w-12 h-12 rounded-full bg-blue-500 border-4 border-slate-800 ring-2 ring-transparent ring-offset-2 ring-offset-slate-900 focus:ring-white btn-target-color" data-color="blue"></button>
+          <button class="w-12 h-12 rounded-full bg-emerald-500 border-4 border-slate-800 ring-2 ring-transparent ring-offset-2 ring-offset-slate-900 focus:ring-white btn-target-color" data-color="green"></button>
+          
+          <label class="w-12 h-12 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center cursor-pointer hover:bg-slate-700 ml-auto" title="上传图片">
+            <i class="fa fa-upload text-gray-400"></i>
+            <input type="file" id="in-target-upload" class="hidden" accept="image/*">
+          </label>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-2 text-sm">
+            <label>大小</label>
+            <span id="val-target-size">100px</span>
+          </div>
+          <input type="range" id="in-target-size" min="60" max="200" value="100" class="w-full">
+        </div>
+      </div>
+
+      <!-- 区域：游戏 -->
+      <div class="mb-10">
+        <h3 class="text-purple-400 font-bold uppercase tracking-wider mb-4 text-sm">游戏设置</h3>
+        
+        <div class="mb-6">
+          <div class="flex justify-between mb-2 text-sm">
+            <label>时长</label>
+            <span id="val-game-duration">60s</span>
+          </div>
+          <input type="range" id="in-game-duration" min="10" max="120" step="10" value="60" class="w-full">
+        </div>
+        
+        <!-- 音效设置 -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <label class="text-sm">命中音效</label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="in-sound-effect" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+            </label>
+          </div>
+          
+          <div class="mb-2">
+            <div class="flex justify-between mb-2 text-sm">
+              <label>音效音量</label>
+              <span id="val-sound-volume">70%</span>
+            </div>
+            <input type="range" id="in-sound-volume" min="0" max="100" value="70" class="w-full">
+          </div>
+        </div>
+
+        <button id="btn-start" class="w-full bg-primary hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform hover:translate-y-[-2px]">
+          开始训练
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /**
+     * State Management
+     */
+    const state = {
+      config: {
+        crosshair: { type: 'dot', size: 8, color: '#00ff00', alpha: 1, sensitivity: 1.0 },
+        target: { size: 100, type: 'color', value: '#ef4444' }, // 类型：'color' | 'image'
+        duration: 60,
+        soundEffect: true,
+        soundVolume: 0.7
+      },
+      game: {
+        active: false,
+        paused: false,
+        score: 0,
+        shots: 0,
+        hits: 0,
+        targets: [], // 数组 {id, x, y, element}
+        timer: null,
+        spawner: null,
+        timeLeft: 60,
+        maxTargets: 5
+      }
+    };
+
+    // 虚拟光标状态（用于指针锁定）
+    const virtualCursor = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    };
+
+    // 修复漂移漏洞：锁定后忽略第一次鼠标移动
+    let skipNextMouseMove = false;
+
+    // DOM 元素
+    const els = {
+      settings: document.getElementById('settings-panel'),
+      game: document.getElementById('game-container'),
+      world: document.getElementById('world-layer'),
+      cursorSvg: document.getElementById('cursor-svg'),
+      cursorLayer: document.getElementById('crosshair-layer'),
+      
+      // 预览
+      prevTargetBox: document.getElementById('preview-target-container'),
+      prevTargetImg: document.getElementById('preview-target-img'),
+      prevCursorSvg: document.getElementById('preview-cursor-svg'),
+      
+      // HUD
+      hudScore: document.getElementById('hud-score'),
+      hudAccuracy: document.getElementById('hud-accuracy'),
+      hudTimer: document.getElementById('hud-timer'),
+      scoreFeedback: document.getElementById('score-feedback-area'),
+      
+      // 覆盖层
+      countdown: document.getElementById('start-countdown'),
+      countNum: document.getElementById('countdown-number'),
+      gameOver: document.getElementById('game-over-screen'),
+      pauseScreen: document.getElementById('pause-screen'),
+      endScore: document.getElementById('end-score'),
+      endAcc: document.getElementById('end-accuracy'),
+      btnPauseGame: document.getElementById('btn-pause-game')
+    };
+
+    /**
+     * 初始化 & 事件监听器
+     */
+    function init() {
+      renderCrosshair(els.prevCursorSvg); // 初始化预览
+      renderCrosshair(els.cursorSvg);     // 初始化游戏准星
+      updateTargetPreview();
+
+      // 初始化虚拟光标到中心
+      virtualCursor.x = window.innerWidth / 2;
+      virtualCursor.y = window.innerHeight / 2;
+
+      // 鼠标跟随逻辑
+      document.addEventListener('mousemove', e => {
+        // 检查指针是否被锁定
+        if (document.pointerLockElement === els.game) {
+          
+          if (skipNextMouseMove) {
+            skipNextMouseMove = false;
+            return;
+          }
+
+          // 安全钳位：忽略极大的跳跃（浏览器伪影）
+          if (Math.abs(e.movementX) > 500 || Math.abs(e.movementY) > 500) {
+            return;
+          }
+
+          // 应用灵敏度
+          virtualCursor.x += e.movementX * state.config.crosshair.sensitivity;
+          virtualCursor.y += e.movementY * state.config.crosshair.sensitivity;
+
+          // 限制在屏幕范围内
+          virtualCursor.x = Math.max(0, Math.min(window.innerWidth, virtualCursor.x));
+          virtualCursor.y = Math.max(0, Math.min(window.innerHeight, virtualCursor.y));
+          
+          // 渲染游戏准星
+          els.cursorLayer.style.transform = `translate(${virtualCursor.x - 20}px, ${virtualCursor.y - 20}px)`;
+
+        } else {
+          // 标准菜单行为（与操作系统光标 1:1）
+          const { clientX: x, clientY: y } = e;
+          
+          // 未锁定时更新虚拟光标以匹配真实光标
+          // 这可以防止锁定时跳跃
+          virtualCursor.x = x;
+          virtualCursor.y = y;
+
+          // 游戏光标
+          els.cursorLayer.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+          
+          // 预览光标（目前仅通过CSS实现视觉上的框内移动逻辑，
+          // 但为了保持一致性，我们可以使其全局跟随鼠标）
+          const box = els.prevTargetBox.parentElement.getBoundingClientRect();
+          if (x >= box.left && x <= box.right && y >= box.top && y <= box.bottom) {
+            // 预览的相对位置
+            els.prevCursorSvg.style.transform = `translate(${x - box.left - 20}px, ${y - box.top - 20}px)`;
+            els.prevCursorSvg.style.opacity = 1;
+          } else {
+            els.prevCursorSvg.style.opacity = 0;
+          }
+        }
+      });
+
+      // 设置输入
+      document.querySelectorAll('.btn-crosshair').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.config.crosshair.type = btn.dataset.type;
+          updatePreview();
+        });
+      });
+
+      document.getElementById('in-cursor-size').addEventListener('input', (e) => {
+        state.config.crosshair.size = parseInt(e.target.value);
+        document.getElementById('val-cursor-size').textContent = e.target.value + 'px';
+        updatePreview();
+      });
+
+      document.getElementById('in-cursor-color').addEventListener('input', (e) => {
+        state.config.crosshair.color = e.target.value;
+        updatePreview();
+      });
+
+      document.getElementById('in-cursor-alpha').addEventListener('input', (e) => {
+        state.config.crosshair.alpha = parseFloat(e.target.value);
+        updatePreview();
+      });
+
+      // 灵敏度输入
+      document.getElementById('in-cursor-sensitivity').addEventListener('input', (e) => {
+        state.config.crosshair.sensitivity = parseFloat(e.target.value);
+        document.getElementById('val-cursor-sensitivity').textContent = e.target.value;
+      });
+
+      // 目标设置
+      document.querySelectorAll('.btn-target-color').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.config.target.type = 'color';
+          const colorMap = { 'red': '#ef4444', 'blue': '#3b82f6', 'green': '#10b981' };
+          state.config.target.value = colorMap[btn.dataset.color];
+          updatePreview();
+        });
+      });
+
+      document.getElementById('in-target-upload').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            state.config.target.type = 'image';
+            state.config.target.value = evt.target.result;
+            updatePreview();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      document.getElementById('in-target-size').addEventListener('input', (e) => {
+        state.config.target.size = parseInt(e.target.value);
+        document.getElementById('val-target-size').textContent = e.target.value + 'px';
+        updatePreview();
+      });
+
+      document.getElementById('in-game-duration').addEventListener('input', (e) => {
+        state.config.duration = parseInt(e.target.value);
+        document.getElementById('val-game-duration').textContent = e.target.value + 's';
+      });
+
+      // 游戏流程
+      document.getElementById('btn-start').addEventListener('click', startGameSequence);
+      document.getElementById('btn-restart').addEventListener('click', startGameSequence);
+      document.getElementById('btn-settings').addEventListener('click', () => {
+        els.gameOver.classList.add('hidden');
+        els.game.classList.add('hidden');
+        els.settings.classList.remove('hidden');
+      });
+      
+      // 音效设置
+      document.getElementById('in-sound-effect').addEventListener('change', (e) => {
+        state.config.soundEffect = e.target.checked;
+      });
+      
+      document.getElementById('in-sound-volume').addEventListener('input', (e) => {
+        state.config.soundVolume = parseInt(e.target.value) / 100;
+        document.getElementById('val-sound-volume').textContent = e.target.value + '%';
+      });
+
+      // 点击 / 射击检测（全局）
+      els.game.addEventListener('mousedown', handleShot);
+      
+      // 暂停按钮事件
+      document.getElementById('btn-resume').addEventListener('click', () => {
+        els.game.requestPointerLock();
+      });
+      
+      document.getElementById('btn-quit').addEventListener('click', quitGame);
+
+      if (els.btnPauseGame) {
+        els.btnPauseGame.addEventListener('click', () => {
+          pauseGame();
+          document.exitPointerLock();
+        });
+      }
+
+      // 指针锁定更改监听器
+      document.addEventListener('pointerlockchange', () => {
+        if (document.pointerLockElement === els.game) {
+          // 已锁定 - 设置标志以跳过下一个立即鼠标移动
+          skipNextMouseMove = true;
+          
+          if (state.game.paused) {
+            resumeGame();
+          }
+        } else {
+          // 已解锁（例如用户按下了 ESC）
+          // 如果游戏处于活动状态且未结束，则暂停
+          if (state.game.active && !state.game.paused) {
+            pauseGame();
+          }
+        }
+      });
+    }
+
+    function pauseGame() {
+      state.game.paused = true;
+      clearInterval(state.game.timer);
+      clearInterval(state.game.spawner);
+      els.pauseScreen.classList.remove('hidden');
+    }
+
+    function resumeGame() {
+      state.game.paused = false;
+      els.pauseScreen.classList.add('hidden');
+      
+      // 恢复计时器和生成器
+      state.game.spawner = setInterval(() => {
+        if (!state.game.active || state.game.paused) return;
+        if (state.game.targets.length < state.game.maxTargets) {
+           spawnTarget();
+        }
+      }, 500);
+
+      state.game.timer = setInterval(() => {
+        if (!state.game.active || state.game.paused) return;
+        state.game.timeLeft--;
+        updateHUD();
+        if (state.game.timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function quitGame() {
+      state.game.active = false;
+      state.game.paused = false;
+      clearInterval(state.game.timer);
+      clearInterval(state.game.spawner);
+      
+      els.pauseScreen.classList.add('hidden');
+      els.game.classList.add('hidden');
+      els.settings.classList.remove('hidden');
+      
+      // 解锁指针（如果在暂停菜单中点击退出，指针已经是解锁状态，但为了安全）
+      document.exitPointerLock();
+    }
+
+    function updatePreview() {
+      renderCrosshair(els.prevCursorSvg);
+      renderCrosshair(els.cursorSvg);
+      updateTargetPreview();
+    }
+
+    function updateTargetPreview() {
+      const size = state.config.target.size;
+      els.prevTargetBox.style.width = size + 'px';
+      els.prevTargetBox.style.height = size + 'px';
+
+      if (state.config.target.type === 'color') {
+        els.prevTargetImg.style.display = 'none';
+        els.prevTargetBox.style.backgroundColor = state.config.target.value;
+        els.prevTargetBox.style.borderRadius = '50%';
+      } else {
+        els.prevTargetImg.style.display = 'block';
+        els.prevTargetImg.src = state.config.target.value;
+        els.prevTargetBox.style.backgroundColor = 'transparent';
+        els.prevTargetBox.style.borderRadius = '0'; // Clip-path 处理它
+      }
+    }
+
+    function renderCrosshair(svg) {
+      svg.innerHTML = '';
+      const { type, size, color, alpha } = state.config.crosshair;
+      const center = 20;
+      const rgba = hexToRgbA(color, alpha);
+
+      // SVG 创建助手
+      const create = (tag, attrs) => {
+        const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for(let k in attrs) el.setAttribute(k, attrs[k]);
+        return el;
+      };
+
+      if (type === 'dot') {
+        svg.appendChild(create('circle', { cx: center, cy: center, r: size/2, fill: rgba }));
+      } else if (type === 'circle') {
+        svg.appendChild(create('circle', { cx: center, cy: center, r: size/2, stroke: rgba, 'stroke-width': 2, fill: 'none' }));
+      } else if (type === 'cross') {
+        svg.appendChild(create('line', { x1: center, y1: center-size, x2: center, y2: center+size, stroke: rgba, 'stroke-width': 2 }));
+        svg.appendChild(create('line', { x1: center-size, y1: center, x2: center+size, y2: center, stroke: rgba, 'stroke-width': 2 }));
+      } else if (type === 'tshape') {
+        // 简单的 T 型
+        // 水平
+        svg.appendChild(create('line', { x1: center-size, y1: center, x2: center+size, y2: center, stroke: rgba, 'stroke-width': 2 }));
+        // 垂直（仅向下）
+        svg.appendChild(create('line', { x1: center, y1: center, x2: center, y2: center+size, stroke: rgba, 'stroke-width': 2 }));
+      }
+    }
+
+    /**
+     * Game Logic
+     */
+    function startGameSequence() {
+      // 在用户交互时立即请求指针锁定
+      els.game.requestPointerLock();
+
+      els.settings.classList.add('hidden');
+      els.gameOver.classList.add('hidden');
+      els.game.classList.remove('hidden');
+      
+      state.game.active = false; // 等待倒计时
+      state.game.paused = false;
+      state.game.score = 0;
+      state.game.shots = 0;
+      state.game.hits = 0;
+      state.game.timeLeft = state.config.duration;
+      
+      // 清理旧目标和计时器
+      state.game.targets.forEach(t => {
+        if (t.timeoutId) clearTimeout(t.timeoutId);
+      });
+      state.game.targets = [];
+      
+      // 重置虚拟光标到中心
+      virtualCursor.x = window.innerWidth / 2;
+      virtualCursor.y = window.innerHeight / 2;
+      
+      // 清除世界
+      els.world.innerHTML = '';
+      updateHUD();
+
+      // 倒计时
+      els.countdown.classList.remove('hidden');
+      let count = 3;
+      els.countNum.textContent = count;
+      
+      const cInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          els.countNum.textContent = count;
+        } else {
+          clearInterval(cInterval);
+          els.countdown.classList.add('hidden');
+          startGame();
+        }
+      }, 1000);
+    }
+
+    function startGame() {
+      state.game.active = true;
+      
+// 确保音频上下文已恢复
+      if (state.config.soundEffect && !audioContext) {
+        initAudioContext();
+      }
+      
+      // 生成初始目标
+      for(let i=0; i<3; i++) spawnTarget();
+
+      // 游戏循环（生成器）- 确保如果低于最大值，我们总是有目标
+      state.game.spawner = setInterval(() => {
+        if (!state.game.active) return;
+        if (state.game.targets.length < state.game.maxTargets) {
+           spawnTarget();
+        }
+      }, 500);
+
+      // 计时器
+      state.game.timer = setInterval(() => {
+        if (!state.game.active) return;
+        state.game.timeLeft--;
+        updateHUD();
+        if (state.game.timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function spawnTarget() {
+      if (state.game.targets.length >= state.game.maxTargets) return;
+
+      const id = Date.now() + Math.random();
+      const size = state.config.target.size;
+      const { width, height } = els.world.getBoundingClientRect();
+      
+      // 随机位置（保持在边界内）
+      const x = Math.random() * (width - size) + size/2;
+      const y = Math.random() * (height - size) + size/2;
+
+      // 创建 DOM
+      const el = document.createElement('div');
+      el.className = 'target animate-pop-in';
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+
+      // 内容
+      if (state.config.target.type === 'color') {
+        el.style.backgroundColor = state.config.target.value;
+        el.style.borderRadius = '50%';
+        el.style.boxShadow = 'inset 0 2px 5px rgba(255, 255, 255, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3)';
+      } else {
+        const img = document.createElement('img');
+        img.src = state.config.target.value;
+        el.appendChild(img);
+        // 为图片目标添加额外的容器来创建更好的阴影效果
+        const shadowContainer = document.createElement('div');
+        shadowContainer.style.position = 'absolute';
+        shadowContainer.style.width = '100%';
+        shadowContainer.style.height = '100%';
+        shadowContainer.style.borderRadius = '50%';
+        shadowContainer.style.boxShadow = 'inset 0 2px 5px rgba(0, 0, 0, 0.2)';
+        shadowContainer.style.pointerEvents = 'none';
+        el.appendChild(shadowContainer);
+      }
+
+      els.world.appendChild(el);
+      
+      const target = { id, x, y, r: size/2, el };
+      
+      // 5秒后自动消失（无音效/特效）
+      target.timeoutId = setTimeout(() => {
+        if (state.game.active) {
+            destroyTarget(target);
+        }
+      }, 3000);
+
+      state.game.targets.push(target);
+    }
+
+    function handleShot(e) {
+      if (!state.game.active) return;
+
+      // 逻辑更新：使用虚拟光标坐标进行命中检测
+      // 当指针被锁定时，e.clientX/Y 可能是中心或未改变。
+      // 我们必须使用我们跟踪的 virtualCursor。
+      
+      let shotX, shotY;
+      if (document.pointerLockElement === els.game) {
+        shotX = virtualCursor.x;
+        shotY = virtualCursor.y;
+      } else {
+        shotX = e.clientX;
+        shotY = e.clientY;
+      }
+
+      // 检查是否击中暂停按钮 (UI交互)
+      if (els.btnPauseGame) {
+        const rect = els.btnPauseGame.getBoundingClientRect();
+        if (shotX >= rect.left && shotX <= rect.right && shotY >= rect.top && shotY <= rect.bottom) {
+          pauseGame();
+          document.exitPointerLock();
+          return; // 阻止后续射击逻辑（不计入命中/未命中）
+        }
+      }
+
+      state.game.shots++;
+
+      let hit = null;
+
+      // 检查碰撞（反向顺序以击中顶层）
+      for (let i = state.game.targets.length - 1; i >= 0; i--) {
+        const t = state.game.targets[i];
+        // 距离公式
+        const dx = shotX - t.x;
+        const dy = shotY - t.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist <= t.r) {
+          hit = t;
+          break;
+        }
+      }
+
+      if (hit) {
+        handleHit(hit);
+      } else {
+        updateHUD(); // 在未命中时更新准确率
+      }
+    }
+
+    // 音频上下文
+    let audioContext;
+    
+    // 初始化音频上下文（需要用户交互）
+    function initAudioContext() {
+      try {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioContext = new AudioContext();
+      } catch(e) {
+        console.error('此浏览器不支持 Web Audio API', e);
+        state.config.soundEffect = false;
+        document.getElementById('in-sound-effect').checked = false;
+      }
+    }
+    
+    // 播放命中音效
+    function playHitSound() {
+      if (!state.config.soundEffect || !audioContext) return;
+      
+      try {
+        // 创建振荡器和增益节点
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        // 连接节点
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // 设置声音属性
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.05);
+        
+        // 设置音量包络
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(state.config.soundVolume * 0.3, audioContext.currentTime + 0.02);
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.15);
+        
+        // 播放声音
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.15);
+      } catch(e) {
+        console.error('播放命中音效时出错', e);
+      }
+    }
+    
+    function handleHit(target) {
+      state.game.score += 100;
+      state.game.hits++;
+      
+      // 1. 视觉效果：瞬间膨胀
+      target.el.style.transition = 'transform 0.05s';
+      target.el.style.transform = 'translate(-50%, -50%) scale(1.1)';
+      
+      // 2. 移除逻辑（在视觉帧的短暂延迟后）
+      setTimeout(() => {
+        destroyTarget(target);
+      }, 50);
+
+      // 3. 粒子
+      spawnParticles(target.x, target.y, getColorOfTarget(target));
+
+      // 4. 播放命中音效
+      if (state.config.soundEffect) {
+        playHitSound();
+      }
+
+      // 5. 分数弹出
+      showScoreFloat();
+
+      // 6. HUD 反馈
+      const scoreEl = els.hudScore;
+      scoreEl.style.transform = 'scale(1.3)';
+      setTimeout(() => scoreEl.style.transform = 'scale(1)', 150);
+
+      updateHUD();
+    }
+
+    function destroyTarget(target) {
+      if (target.timeoutId) clearTimeout(target.timeoutId);
+      if (target.el.parentNode) target.el.parentNode.removeChild(target.el);
+      state.game.targets = state.game.targets.filter(t => t.id !== target.id);
+      // 立即重生检查由间隔处理，但如果我们想要快节奏，我们可以强制一个
+      // 生成目标(); 
+    }
+
+    function spawnParticles(x, y, color) {
+      const count = 15 + Math.random() * 5;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 6 + 4;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.backgroundColor = color;
+        p.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.3)';
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        
+        els.world.appendChild(p);
+
+        // 物理
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 100 + 50; // 像素每秒？不，纯视觉
+        
+        // GSAP 会很不错，但我们可以使用 Web Animations API 或 CSS 过渡
+        // 让我们使用一个简单的动画循环或 CSS 过渡
+        p.style.transition = 'all 0.4s ease-out';
+        
+        requestAnimationFrame(() => {
+           const destX = x + Math.cos(angle) * 100;
+           const destY = y + Math.sin(angle) * 100;
+           p.style.transform = `translate(${Math.cos(angle)*100}px, ${Math.sin(angle)*100}px) scale(0)`;
+           p.style.opacity = 0;
+        });
+
+        setTimeout(() => {
+          if(p.parentNode) p.parentNode.removeChild(p);
+        }, 400);
+      }
+    }
+
+    function showScoreFloat() {
+      const el = document.createElement('div');
+      el.className = 'score-float';
+      el.textContent = '+100';
+      // 稍微随机化
+      el.style.left = (Math.random() * 20) + 'px';
+      els.scoreFeedback.appendChild(el);
+      setTimeout(() => { if(el.parentNode) el.parentNode.removeChild(el); }, 800);
+    }
+
+    function getColorOfTarget(target) {
+      // 如果是颜色类型
+      if (state.config.target.type === 'color') return state.config.target.value;
+      // 如果是图片，平均颜色？或者只是白色/粒子颜色？ 
+      // 为了简单起见，让我们选择一个主导颜色或默认白色/灰色
+      return '#cbd5e1'; 
+    }
+
+    function updateHUD() {
+      els.hudScore.textContent = state.game.score;
+      els.hudTimer.textContent = state.game.timeLeft;
+      
+      const acc = state.game.shots === 0 ? 0 : Math.round((state.game.hits / state.game.shots) * 100);
+      els.hudAccuracy.textContent = acc + '%';
+    }
+
+    function getAccuracyRank(accuracy) {
+      // 准确率等级评价系统
+      const ranks = [
+        {
+          min: 95,
+          max: 100,
+          title: "人形自走挂",
+          description: "系统检测到异常数据……开玩笑的。这种精准度简直恐怖，你是把准星焊在目标上了吗？职业赛场在等你。",
+          color: "#8b5cf6" // 紫色
+        },
+        {
+          min: 85,
+          max: 94,
+          title: "定点爆头机器",
+          description: "超越了绝大多数玩家！你的肌肉记忆已经非常成熟，此时此刻，你就是对面的噩梦。",
+          color: "#ec4899" // 粉色
+        },
+        {
+          min: 70,
+          max: 84,
+          title: "坚实的老兵",
+          description: "枪法稳健，值得信赖。虽然偶尔会马枪，但在关键局里你总是能站出来。再多一点专注，你将突破瓶颈。",
+          color: "#3b82f6" // 蓝色
+        },
+        {
+          min: 50,
+          max: 69,
+          title: "随缘枪法大师",
+          description: "只要我子弹够多，总有一发能蒙中？你的身法可能很秀，但控枪还需要多加练习。试着慢一点，打得准比打得快更重要。",
+          color: "#f59e0b" // 橙色
+        },
+        {
+          min: 0,
+          max: 49,
+          title: "战术人体描边",
+          description: "这是一种战术恐吓，对吧？看来今天的灵敏度不太听话。别灰心，调整一下呼吸，检查一下设置，我们重新来过。",
+          color: "#ef4444" // 红色
+        }
+      ];
+      
+      // 找到对应的等级
+      for (const rank of ranks) {
+        if (accuracy >= rank.min && accuracy <= rank.max) {
+          return rank;
+        }
+      }
+      
+      // 默认返回最低等级
+      return ranks[ranks.length - 1];
+    }
+    
+    function endGame() {
+      state.game.active = false;
+      state.game.paused = false;
+      clearInterval(state.game.timer);
+      clearInterval(state.game.spawner);
+      
+      // 确保暂停菜单隐藏
+      els.pauseScreen.classList.add('hidden');
+      
+      // 解锁指针
+      document.exitPointerLock();
+      
+      // 计算准确率和得分
+      const acc = state.game.shots === 0 ? 0 : Math.round((state.game.hits / state.game.shots) * 100);
+      const rank = getAccuracyRank(acc);
+      
+      // 更新UI
+      els.endScore.textContent = state.game.score;
+      els.endAcc.textContent = acc + '%';
+      
+      // 更新准确率等级评价
+      document.getElementById('rank-title').textContent = rank.title;
+      document.getElementById('rank-title').style.color = rank.color;
+      document.getElementById('rank-description').textContent = rank.description;
+      document.getElementById('accuracy-bar').style.width = acc + '%';
+      document.getElementById('accuracy-bar').style.backgroundColor = rank.color;
+      
+      // 显示游戏结束屏幕
+      els.gameOver.classList.remove('hidden');
+    }
+
+    function hexToRgbA(hex, alpha){
+        let c;
+        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+            c= hex.substring(1).split('');
+            if(c.length== 3){
+                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c= '0x'+c.join('');
+            return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+        }
+        return 'rgba(255,255,255,1)';
+    }
+
+    // 在第一次用户交互时初始化音频上下文
+    document.addEventListener('click', () => {
+      if (state.config.soundEffect && !audioContext) {
+        initAudioContext();
+      }
+    }, { once: true });
+    
+    // 运行
+    init();
+
+  </script>
+</body>
+</html>
