@@ -31,15 +31,17 @@
     }
   </style>
 </head>
-<body style="font-family: 'Noto Sans JP', sans-serif; background-color: #FFF8F2; overflow-x: hidden;" class="relative">
-  <div class="fixed inset-0 -z-10 overflow-hidden">
-    <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-wave1"></div>
-    <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave2"></div>
-    <div class="absolute bottom-0 left-0 w-[200%] h-24 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-wave3"></div>
-  </div>
+<body style="font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden;" class="relative">
+  <!-- 动态二次元壁纸轮播背景 -->
+  <div id="anime-bg-slider" class="fixed inset-0 -z-30 bg-cover bg-center transition-opacity duration-1000" style="opacity: 0.15;"></div>
+
+  <!-- 动态艺术背景 -->
+  <canvas id="bg-canvas" class="fixed inset-0 -z-20 pointer-events-none"></canvas>
+
+
 
   <!-- 响应式导航栏 -->
-  <nav style="background-color: #98FB98;" class="bg-gradient-to-r from-transparent via-white/10 to-transparent shadow-lg sticky top-0 z-50 backdrop-blur-md">
+  <nav class="sticky top-0 z-50 backdrop-blur-md transition-all duration-300">
     <div class="max-w-6xl mx-auto px-4 sm:px-5 flex justify-between items-center h-15">
       <div class="flex items-center gap-2 sm:gap-2.5 font-bold text-lg sm:text-xl text-gray-800">
         <i class="fas fa-home" style="color: #F8E1E9;" class="animate-bounce"></i>
@@ -122,7 +124,7 @@
 
   <main class="max-w-6xl mx-auto px-4 sm:px-5 py-6 sm:py-10">
     <!-- 舍友一览 - 响应式网格 -->
-    <section id="roommates" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+    <section id="roommates" class="mb-10 sm:mb-15 p-4 sm:p-8 apple-glass-card rounded-2xl sm:rounded-3xl scroll-mt-24">
       <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
         <span class="relative">舍友一览</span>
         <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">バカ！</span>
@@ -206,18 +208,17 @@
     </section>
     
     <!-- 宠物窝 - 响应式布局 -->
-    <section id="pets" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+    <section id="pets" class="mb-10 sm:mb-15 p-4 sm:p-8 apple-glass-card rounded-2xl sm:rounded-3xl scroll-mt-24">
       <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
         <span class="relative">宠物窝</span>
         <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">にゃあ！</span>
       </h2>
-      <div class="relative min-h-[300px] sm:min-h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-10" style="background: linear-gradient(to bottom right, #98FB98, #F8E1E9);">
+      <div class="relative min-h-[300px] sm:min-h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden p-4 sm:p-10" style="background: linear-gradient(to bottom right, rgba(152, 251, 152, 0.15), rgba(248, 225, 233, 0.15));">
         <div class="absolute inset-0 pointer-events-none room-decoration">
-          <div class="absolute bottom-5 left-5 w-12 h-16 sm:w-15 sm:h-20 bg-gradient-to-br from-red-400 to-cyan-400 rounded transform -rotate-15 manga-books"></div>
-          <div class="absolute bottom-10 right-7.5 w-8 h-12 sm:w-10 sm:h-15 bg-gradient-to-br from-yellow-300 to-red-400 rounded-2xl transform rotate-10 snack-bag"></div>
+
         </div>
         <div class="flex flex-col lg:flex-row gap-6 sm:gap-10 justify-between">
-          <div class="flex-1 min-w-0 bg-white/70 rounded-2xl shadow-lg p-4 sm:p-8 relative pet-block">
+          <div class="flex-1 min-w-0 bg-white/30 rounded-2xl shadow-lg p-4 sm:p-8 relative pet-block">
             <div style="color: #D4A5D6;" class="text-lg sm:text-xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-2.5 tracking-wider block-title">
               <i class="fas fa-fish"></i> 鱼缸
             </div>
@@ -235,7 +236,7 @@
               </div>
             </div>
           </div>
-          <div class="flex-1 min-w-0 bg-white/70 rounded-2xl shadow-lg p-4 sm:p-8 relative plant-block">
+          <div class="flex-1 min-w-0 bg-white/30 rounded-2xl shadow-lg p-4 sm:p-8 relative plant-block">
             <div style="color: #D4A5D6;" class="text-lg sm:text-xl font-bold mb-4 sm:mb-6 flex items-center gap-2 sm:gap-2.5 tracking-wider block-title">
               <i class="fas fa-seedling"></i> 植物区
             </div>
@@ -266,7 +267,7 @@
     </section>
 
     <!-- 趣味区 - 响应式网格 -->
-    <section id="fun" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+    <section id="fun" class="mb-10 sm:mb-15 p-4 sm:p-8 apple-glass-card rounded-2xl sm:rounded-3xl scroll-mt-24">
       <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
         <span class="relative">趣味区</span>
         <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">たのしい！</span>
@@ -280,7 +281,7 @@
     </section>
 
     <!-- 通话模块 - 响应式布局 -->
-    <section id="call" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+    <section id="call" class="mb-10 sm:mb-15 p-4 sm:p-8 apple-glass-card rounded-2xl sm:rounded-3xl scroll-mt-24">
       <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6 text-2xl sm:text-4xl font-bold text-gray-800">
         <span class="relative">通话模块</span>
         <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">みんな話そう！</span>
@@ -301,7 +302,7 @@
     </section>
 
     <!-- 今日舍规 - 重构布局 -->
-    <section id="rules" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+    <section id="rules" class="mb-10 sm:mb-15 p-4 sm:p-8 apple-glass-card rounded-2xl sm:rounded-3xl scroll-mt-24">
       <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
         <span class="relative">今日舍规</span>
         <span style="color: #FFD700; background-color: #D4A5D6;" class="text-sm sm:text-base px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl opacity-80 animate-pulse">きをつけてね～</span>
@@ -310,7 +311,7 @@
       <!-- 重构后的舍规布局 -->
       <div class="rules-container relative">
         <!-- 背景装饰 -->
-        <div class="rules-bg absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden" style="background: linear-gradient(135deg, #D4A5D6, #F8E1E9);">
+        <div class="rules-bg absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden" style="background: linear-gradient(135deg, rgba(212, 165, 214, 0.15), rgba(248, 225, 233, 0.15));">
           <div class="absolute inset-0 opacity-20">
             <div class="absolute top-4 left-4 w-16 h-16 rounded-full bg-white/30"></div>
             <div class="absolute bottom-4 right-4 w-20 h-20 rounded-full bg-white/20"></div>
@@ -320,7 +321,7 @@
         
         <!-- 主要内容区域 -->
         <div class="rules-content relative z-10 p-6 sm:p-8 lg:p-10">
-          <div class="rules-card bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-10 border-2 border-white/50">
+          <div class="rules-card backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-10 border-2 border-white/50">
             <!-- 头像和标题行 -->
             <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div class="leader-avatar flex-shrink-0">
@@ -348,7 +349,7 @@
     </section>
 
     <!-- 节日倒计时 - 响应式网格 -->
-    <section id="countdown" class="mb-10 sm:mb-15 p-4 sm:p-8 bg-white/80 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/20 scroll-mt-24">
+    <section id="countdown" class="mb-10 sm:mb-15 p-4 sm:p-8 apple-glass-card rounded-2xl sm:rounded-3xl scroll-mt-24">
       <h2 class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-2xl sm:text-4xl font-bold text-gray-800">
         <span class="relative">节日倒计时</span>
       </h2>
@@ -364,6 +365,7 @@
     </div>
   </div>
 
+  <script type="module" src="/src/background.js"></script>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
