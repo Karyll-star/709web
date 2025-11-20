@@ -406,5 +406,37 @@
       });
     });
   </script>
+  <!-- Sakana! Widget -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakana-widget@2.7.1/lib/sakana.min.css" />
+  <!-- 容器 1: 千束 (左下角) -->
+  <div id="sakana-widget-chisato" style="position: fixed; bottom: 10px; left: 0px; z-index: 100;"></div>
+  <!-- 容器 2: 泷奈 (千束右侧) -->
+  <div id="sakana-widget-takina" style="position: fixed; bottom: 10px; left: 160px; z-index: 100;"></div>
+  
+  <script>
+    function initSakanaWidget() {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/sakana-widget@2.7.1/lib/sakana.min.js';
+      script.onload = () => {
+        // 初始化千束
+        new SakanaWidget({
+          character: 'chisato', 
+          controls: false,      // 隐藏控制栏
+          size: 180,            // 稍微调小一点，方便并排
+          threshold: 0.1
+        }).mount('#sakana-widget-chisato');
+
+        // 初始化泷奈
+        new SakanaWidget({
+          character: 'takina', 
+          controls: false,      // 隐藏控制栏
+          size: 180,
+          threshold: 0.1
+        }).mount('#sakana-widget-takina');
+      };
+      document.body.appendChild(script);
+    }
+    window.addEventListener('load', initSakanaWidget);
+  </script>
 </body>
 </html>
