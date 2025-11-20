@@ -1,3 +1,6 @@
+/* 直接导入 Tailwind CSS */
+@import "tailwindcss";
+
 /* =========================================
    Sakura Pop Theme (日式二次元风格)
    ========================================= */
@@ -21,11 +24,10 @@ body {
     background-size: 20px 20px;
     
     /* 自定义光标 - 默认状态 */
-    /* 请确保 嘻嘻.gif 位于 public 目录下 */
     cursor: url('/嘻嘻.gif'), auto; 
 }
 
-/* 链接和按钮的自定义指针 - 通常使用同一张图或者变体 */
+/* 链接和按钮的自定义指针 */
 a, button, .cursor-pointer, .roommate-card {
     cursor: url('/嘻嘻.gif'), pointer;
 }
@@ -225,10 +227,6 @@ a, button, .cursor-pointer, .roommate-card {
     background-color: #FFF !important; /* 覆盖内联颜色 */
 }
 
-/* 针对不同属性的特殊颜色（利用 nth-child 或 class，这里简化处理，统一用边框色区分） */
-/* 如果想保留原来的背景色，需要 !important 覆盖上面的 .power-stats span */
-/* 但为了波普风，建议白底黑字+彩色边框/阴影 */
-
 /* 名言 - 漫画气泡风格 */
 .card-quote {
     background: #FFF !important;
@@ -369,11 +367,6 @@ nav {
     box-shadow: 0 0 0 2px white, 0 0 0 4px var(--sakura-pink);
 }
 
-/* 直接导入 Tailwind CSS（保持不变，Vite 插件会处理） */
-@import "tailwindcss";
-
-/* 自定义动画和特殊样式 - 配合原生 CSS 使用 */
-
 /* 移动端导航链接样式 */
 .mobile-nav-link {
     color: #1F2937;
@@ -408,12 +401,7 @@ nav {
     opacity: 1;
 }
 
-/* 星星效果 */
-.star-effect {
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-}
-
-/* 眨眼动画 */
+/* 自定义动画：眨眼 */
 @keyframes blink {
     0%, 90%, 100% { transform: scaleY(1); }
     92% { transform: scaleY(0.1); }
@@ -433,537 +421,11 @@ nav {
     animation: tail-swing 0.7s infinite alternate;
 }
 
-/* 拖拽状态样式 */
-.pet.dragging {
-    box-shadow: 0 25px 50px -12px rgba(255, 215, 0, 0.5); /* shadow-2xl shadow-bright-yellow/50 */
-    border: 3px dashed #D4A5D6; /* border-3 border-dashed border-jelly-purple */
-    z-index: 20; /* z-20 */
-}
-
-/* 响应式调整 */
-@media (max-width: 900px) {
-    .pet-plant-wrapper {
-        flex-direction: column; /* flex-col */
-        gap: 2rem; /* gap-8 */
-    }
-    
-    .pet-block, .plant-block {
-        min-width: 0; /* min-w-0 */
-        margin-left: 0; /* mx-0 */
-        margin-right: 0;
-    }
-    
-    .pet-container, .plant-container {
-        gap: 1.25rem; /* gap-5 */
-    }
-    
-    .rules-container, .ai-dorm-leader {
-        flex-direction: column; /* flex-col */
-        gap: 1.25rem; /* gap-5 */
-        min-width: 0; /* min-w-0 */
-        padding: 1.25rem; /* p-5 */
-    }
-    
-    .leader-avatar img {
-        width: 5rem; /* w-20 */
-        height: 5rem; /* h-20 */
-    }
-}
-
-@media (max-width: 768px) {
-    .nav-menu {
-        flex-direction: column; /* flex-col */
-        gap: 0.625rem; /* gap-2.5 */
-    }
-    
-    .roommates-grid {
-        grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
-    }
-    
-    .countdown-container {
-        grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
-    }
-    
-    /* 移动端优化 */
-    .roommate-card {
-        margin: 0 auto;
-        max-width: 100%;
-    }
-    
-    .fish-tank {
-        width: 100% !important;
-        max-width: 320px;
-    }
-    
-    .plant-sticker {
-        width: 4rem !important;
-        height: 4rem !important;
-    }
-}
-
-/* 超小屏幕优化 */
-@media (max-width: 480px) {
-    .roommate-card {
-        min-height: 280px;
-        padding: 1rem;
-    }
-    
-    .roommate-card img {
-        height: 8rem !important;
-    }
-    
-    .fish-tank {
-        height: 8rem !important;
-        border-width: 3px !important;
-    }
-    
-    .swim-fish {
-        width: 2.5rem !important;
-        height: 1.5rem !important;
-    }
-    
-    .fish-body {
-        width: 1.5rem !important;
-        height: 1rem !important;
-    }
-    
-    .fish-tail {
-        width: 1rem !important;
-        height: 0.75rem !important;
-    }
-    
-    .plant-sticker {
-        width: 3rem !important;
-        height: 3rem !important;
-    }
-    
-    .eyes div {
-        width: 0.75rem !important;
-        height: 0.75rem !important;
-    }
-    
-    .cheeks div {
-        width: 0.75rem !important;
-        height: 0.5rem !important;
-    }
-    
-    .paws div {
-        width: 0.5rem !important;
-        height: 0.75rem !important;
-    }
-    
-    /* 确保小鱼在移动端正确显示 */
-    .swim-fish[id="fish1"],
-    .swim-fish[id="fish2"] {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
-
-/* 特殊动画效果 */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-@keyframes flash {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-.shake {
-    animation: shake 0.5s ease-in-out;
-}
-
-.flash {
-    animation: flash 0.3s ease-in-out;
-}
-
-/* 节日倒计时特殊效果 */
-.countdown-timer.urgent {
-    animation: pulse 1s ease-in-out infinite;
-}
-
-.countdown-timer.final-day {
-    animation: flash 0.5s ease-in-out infinite;
-}
-
-/* 移动端倒计时时间显示优化 */
-@media (max-width: 768px) {
-    .countdown-timer {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: center;
-    }
-    
-    .countdown-timer .days,
-    .countdown-timer .hours,
-    .countdown-timer .minutes {
-        min-width: 2.5rem !important;
-        font-size: 0.875rem !important;
-        padding: 0.5rem 0.25rem !important;
-    }
-    
-    .countdown-timer span {
-        font-size: 0.875rem !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .countdown-timer {
-        /* 移动端垂直布局 - 每个时间项单独一行 */
-        display: flex !important;
-
-        align-items: center !important;
-        gap: 0.75rem !important;
-        justify-content: left !important;
-    }
-    
-    /* 每个时间项独立成行 */
-    .countdown-timer > * {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 0.1rem !important;
-        width: 100% !important;
-        max-width: 60px !important;
-    }
-    
-    /* 时间数字样式 */
-    .countdown-timer .days,
-    .countdown-timer .hours,
-    .countdown-timer .minutes {
-        min-width: 1rem !important;
-        font-size: 1rem !important;
-        padding: 0.1rem 0.5rem !important;
-        text-align: center !important;
-        background: white !important;
-        border-radius: 0.5rem !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    }
-    
-    /* 时间单位样式 */
-    .countdown-timer span + * {
-        font-size: 1rem !important;
-        font-weight: bold !important;
-        color: #D4A5D6 !important;
-        min-width: 2rem !important;
-        text-align: center !important;
-    }
-}
-
-/* 节日名称突出样式 */
-.countdown-info h3 {
-    /* 基础样式 */
-    font-size: 1.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    
-    /* 渐变文字效果 */
-    background: linear-gradient(135deg, #D4A5D6, #FF6B9D, #FFD700);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    
-    /* 文字阴影 */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    
-    /* 动画效果 */
-    animation: gradient-shift 3s ease-in-out infinite;
-    
-    /* 悬停效果 */
-    transition: all 0.3s ease;
-}
-
-.countdown-info h3:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
-
-/* 渐变文字动画 */
-@keyframes gradient-shift {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-}
-
-/* 移动端节日名称优化 */
-@media (max-width: 768px) {
-    .countdown-info h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.75rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .countdown-info h3 {
-        font-size: 1.125rem;
-        margin-bottom: 0.5rem;
-        text-align: center;
-    }
-}
-
-/* 节日名称装饰效果 */
-.countdown-info h3::before {
-    content: '🎉';
-    display: inline-block;
-    margin-right: 0.5rem;
-    font-size: 1.2em;
-    animation: bounce 2s ease-in-out infinite;
-}
-
-.countdown-info h3::after {
-    content: '✨';
-    display: inline-block;
-    margin-left: 0.5rem;
-    font-size: 1.2em;
-    animation: sparkle 1.5s ease-in-out infinite;
-}
-
-/* 装饰动画 */
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-5px);
-    }
-    60% {
-        transform: translateY(-3px);
-    }
-}
-
-@keyframes sparkle {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-    }
-    50% {
-        opacity: 0.7;
-        transform: scale(1.1) rotate(180deg);
-    }
-}
-
-/* 通知样式 */
-.notification {
-    position: fixed;
-    top: 1.25rem; /* top-5 */
-    right: 1.25rem; /* right-5 */
-    background-color: #FFD700; /* bg-bright-yellow */
-    color: #1F2937; /* text-gray-800 */
-    padding: 1.25rem 1.25rem; /* px-5 py-4 */
-    border-radius: 0.75rem; /* rounded-xl */
-    box-shadow: 0 25px 50px -12px rgba(75, 85, 99, 0.3); /* shadow-xl shadow-gray-400/30 */
-    z-index: 3000; /* z-[3000] */
-    transform: translateX(100%); /* translate-x-full */
-    transition: transform 0.3s; /* transition-transform duration-300 */
-}
-
-/* 弹窗动画 */
-.modal {
-    transition: opacity 0.3s ease;
-}
-
-/* 自定义工具类 */
-.clip-polygon {
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-}
-
-/* 鱼缸特殊样式 */
-.fish-tank {
-    border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
-    position: relative;
-    overflow: hidden;
-}
-
-/* 移动端鱼缸优化 */
-@media (max-width: 640px) {
-    .fish-tank {
-        border-radius: 30% 30% 40% 40% / 50% 50% 30% 30%;
-    }
-}
-
-@media (max-width: 480px) {
-    .fish-tank {
-        border-radius: 25% 25% 35% 35% / 45% 45% 25% 25%;
-    }
-}
-
-/* 小鱼样式 */
-.swim-fish {
-    position: absolute;
-    z-index: 20;
-    pointer-events: auto;
-    transition: all 0.5s ease;
-}
-
-/* 确保小鱼在所有设备上都可见 */
-.swim-fish[id="fish1"],
-.swim-fish[id="fish2"] {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-.fish-body {
-    border-radius: 50% 60% 60% 50% / 60% 60% 40% 40%;
-}
-
-.fish-tail {
-    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
-}
-
-.fish-eye {
-    position: absolute;
-    z-index: 25;
-}
-
-/* 水波动画 */
-@keyframes water-move {
-    0% { filter: blur(2px) brightness(1); }
-    100% { filter: blur(6px) brightness(1.05); }
-}
-
-.water {
-    animation: water-move 4s linear infinite alternate;
-}
-
-/* 植物叶子动画 */
-@keyframes leaf-sway {
-    0% { transform: translateX(-50%) rotate(-10deg) scaleY(1); }
-    100% { transform: translateX(-50%) rotate(100deg) scaleY(0.95); }
-}
-
-.plant-sticker::after {
-    content: '';
-    position: absolute;
-    top: 0.625rem; /* top-2.5 */
-    left: 50%;
-    width: 1.875rem; /* w-7.5 */
-    height: 2.5rem; /* h-10 */
-    background: linear-gradient(to bottom right, rgba(98, 245, 152, 0.6), #D4A5D6); /* from-mint-green/60 to-jelly-purple/100 */
-    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
-    transform: translateX(-50%) rotate(-10deg);
-    opacity: 0.6; /* opacity-60 */
-    animation: leaf-sway 1.8s infinite alternate;
-}
-
-/* 移动端植物叶子动画优化 */
-@media (max-width: 640px) {
-    .plant-sticker::after {
-        width: 1.25rem; /* w-5 */
-        height: 1.75rem; /* h-7 */
-        top: 0.25rem; /* top-1 - 降低位置避免重叠 */
-        /* 调整旋转角度，让叶子更贴近植物边缘 */
-        transform: translateX(-50%) rotate(-15deg);
-    }
-}
-
-@media (max-width: 480px) {
-    .plant-sticker::after {
-        width: 0.875rem; /* w-3.5 - 进一步缩小 */
-        height: 1.25rem; /* h-5 - 进一步缩小 */
-        top: 0.125rem; /* top-0.5 - 进一步降低位置 */
-        /* 调整旋转角度和位置 */
-        transform: translateX(-50%) rotate(-20deg);
-        /* 确保在超小屏幕上不会重叠 */
-        z-index: 1;
-    }
-}
-
-/* 超小屏幕进一步优化叶子位置 */
-@media (max-width: 400px) {
-    .plant-sticker::after {
-        width: 0.75rem; /* w-3 */
-        height: 1rem; /* h-4 */
-        top: 0.0625rem; /* top-0.25 - 几乎贴近顶部边缘 */
-        /* 进一步调整位置，确保不重叠 */
-        transform: translateX(-50%) rotate(-25deg);
-        /* 降低透明度，减少视觉干扰 */
-        opacity: 0.4;
-    }
-}
-
-/* 确保面部元素层级正确 */
-.plant-sticker .eyes {
-    z-index: 30 !important;
-}
-
-.plant-sticker .cheeks {
-    z-index: 10 !important;
-}
-
-.plant-sticker .paws {
-    z-index: 20 !important;
-}
-
-/* 植物腮红圆形样式 */
-.plant-sticker .cheeks div {
-    /* 确保完全圆形 */
-    border-radius: 50% !important;
-    /* 添加圆形阴影效果 */
-    box-shadow: 0 2px 4px rgba(236, 72, 153, 0.3);
-    /* 平滑过渡 */
-    transition: all 0.3s ease;
-    /* 确保圆形显示 */
-    aspect-ratio: 1;
-    /* 添加渐变背景，让腮红更自然 */
-    background: radial-gradient(circle, #fbbf24 0%, #f59e0b 50%, #d97706 100%) !important;
-    /* 确保渐变在圆形内显示 */
-    background-clip: padding-box;
-    /* 添加内阴影，增加立体感 */
-    box-shadow: 
-        inset 0 1px 3px rgba(255, 255, 255, 0.3),
-        0 2px 4px rgba(236, 72, 153, 0.3);
-    /* 添加轻微的脉动动画 */
-    animation: blush-pulse 3s ease-in-out infinite;
-}
-
-/* 腮红悬停效果 */
-.plant-sticker .cheeks div:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(236, 72, 153, 0.5);
-}
-
-/* 腮红脉动动画 */
-@keyframes blush-pulse {
-    0%, 100% {
-        opacity: 0.7;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.9;
-        transform: scale(1.05);
-    }
-}
-
-/* 移动端腮红优化 */
-@media (max-width: 640px) {
-    .plant-sticker .cheeks div {
-        /* 确保移动端也是完美圆形 */
-        border-radius: 50% !important;
-        aspect-ratio: 1;
-    }
-}
-
-@media (max-width: 480px) {
-    .plant-sticker .cheeks div {
-        /* 超小屏幕腮红优化 */
-        border-radius: 50% !important;
-        aspect-ratio: 1;
-        /* 添加更柔和的阴影 */
-        box-shadow: 
-            inset 0 1px 2px rgba(255, 255, 255, 0.3),
-            0 1px 3px rgba(236, 72, 153, 0.4);
-    }
+/* 拖拽时的视觉反馈 */
+.pet:active .pet-sticker, .pet.dragging .pet-sticker {
+    transform: scale(1.1) rotate(-6deg); /* scale-110 -rotate-6 */
+    box-shadow: 0 25px 50px -12px rgba(212, 165, 214, 0.5); /* shadow-2xl shadow-jelly-purple/50 */
+    z-index: 10; /* z-10 */
 }
 
 /* 宠物贴纸增强样式 */
@@ -979,13 +441,6 @@ nav {
     transform: rotate(-20deg); /* -rotate-20 */
     opacity: 0.7; /* opacity-70 */
     animation: tail-swing 1.2s infinite alternate;
-}
-
-/* 拖拽时的视觉反馈 */
-.pet:active .pet-sticker, .pet.dragging .pet-sticker {
-    transform: scale(1.1) rotate(-6deg); /* scale-110 -rotate-6 */
-    box-shadow: 0 25px 50px -12px rgba(212, 165, 214, 0.5); /* shadow-2xl shadow-jelly-purple/50 */
-    z-index: 10; /* z-10 */
 }
 
 /* -----------------------------------------
@@ -1059,9 +514,6 @@ nav {
     width: 100%;
 }
 
-/* 简单的文字滚动动画如果太长 */
-/* 这里暂时只做静态截断，复杂的 marquee 需要 JS 配合 */
-
 .player-controls {
     display: flex;
     justify-content: space-around;
@@ -1088,11 +540,12 @@ nav {
     to { transform: rotate(360deg); }
 }
 
-/* 移动端适配：稍微缩小或调整位置 */
+/* 移动端适配 */
 @media (max-width: 768px) {
     .music-player-container {
-        bottom: 180px; /* 移动端 Sakana 可能隐藏，位置可以低一点 */
+        bottom: 180px; 
         left: 10px;
+        top: auto; right: auto; /* 移动端改回左下，避免遮挡菜单 */
         width: 180px;
         padding: 5px 10px 5px 5px;
     }
@@ -1100,4 +553,40 @@ nav {
         width: 32px;
         height: 32px;
     }
+}
+
+/* -----------------------------------------
+   滚动条美化 (Custom Scrollbar)
+   ----------------------------------------- */
+
+/* WebKit 浏览器 (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 12px; /* 纵向滚动条宽度 */
+    height: 12px; /* 横向滚动条高度 */
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+    background: rgba(255, 249, 251, 0.5); /* 半透明奶油白 */
+    border-radius: 6px;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    background-color: var(--sakura-pink); /* 樱花粉 */
+    border-radius: 6px;
+    border: 3px solid transparent; /* 创建内边距效果 */
+    background-clip: content-box; 
+    transition: background-color 0.3s;
+}
+
+/* 鼠标悬停在滑块上 */
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--sakura-dark); /* 深粉色 */
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sakura-pink) var(--cream-white);
 }
