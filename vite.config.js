@@ -9,7 +9,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: './index.html',
-        luya: './luya.html'
+        luya: './luya.html',
+        aim: './aim.html'
       }
     }
   }
