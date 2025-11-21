@@ -16,15 +16,16 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install
-        run: pip install -r requirements.txt
+        run: pip install requests telegramify_markdown
       - name: Run
         env:
-          URL: ${{ secrets.URL }}
+          URL: https://yktyd.ecust.edu.cn/epay/wxpage/wanxiao/eleresult;jsessionid=2563CF2509A187190A12B5E5CA2D0C39?sysid=1&roomid=709&areaid=2&buildid=41
           PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
           GITHUB_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_USER_IDS: ${{ secrets.TELEGRAM_USER_IDS }}
-        run: |
+        run: |-
+          cd ./ecust-electricity-statistics
           python main.py
       - name: git config
         run: |-
@@ -35,5 +36,5 @@ jobs:
           git diff
           git add -A
           git status
-          git commit -m "update by github actions"
+          git commit -m "update electricity-data"
           git push
