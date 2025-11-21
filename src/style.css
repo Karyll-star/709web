@@ -444,56 +444,77 @@ nav {
 }
 
 /* -----------------------------------------
-   Sakura Pop 音乐播放器
+   Sakura Pop 音乐播放器 (Glassmorphism Capsule)
    ----------------------------------------- */
 .music-player-container {
     position: fixed;
-    top: 80px;  /* 避开顶部导航栏 */
-    right: 20px; /* 移动到右上角 */
+    top: 80px;
+    right: 20px;
     z-index: 90;
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #FFFFFF;
-    border: 3px solid var(--sakura-pink);
-    border-radius: 50px; /* 胶囊形状 */
-    padding: 8px 15px 8px 8px;
-    box-shadow: 4px 4px 0px var(--pop-blue);
+    gap: 12px; /* 增加间距 */
+    
+    /* 磨砂玻璃效果 */
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px; /* 圆角胶囊 */
+    padding: 8px 16px;
+    
+    /* 柔和阴影 */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    width: 220px;
+    width: auto; /* 宽度自适应内容 */
+    min-width: 200px;
+    max-width: 300px;
 }
 
 .music-player-container:hover {
-    transform: translateX(-5px); /* 向左微动 */
-    box-shadow: 6px 6px 0px var(--sakura-dark);
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
 }
 
-.player-disc {
-    width: 40px;
-    height: 40px;
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-controls button {
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
     border-radius: 50%;
-    background: #333;
-    border: 2px solid var(--text-main);
-    position: relative;
-    flex-shrink: 0;
-    animation: spin 3s linear infinite;
-    animation-play-state: paused; /* 默认暂停 */
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--pop-blue);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.player-disc.playing {
-    animation-play-state: running;
-}
-
-.disc-cover {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 12px;
-    height: 12px;
+.player-controls button#play-btn {
     background: var(--sakura-pink);
-    border-radius: 50%;
-    border: 2px solid #FFF;
+    color: white;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 8px rgba(255, 183, 197, 0.6);
+}
+
+.player-controls button:hover {
+    transform: scale(1.1);
+}
+
+.player-controls button#play-btn:hover {
+    background: var(--sakura-dark);
+    transform: scale(1.1) rotate(5deg);
 }
 
 .player-info {
@@ -502,56 +523,34 @@ nav {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 2px;
+    border-left: 1px solid rgba(0,0,0,0.05); /* 分隔线 */
+    padding-left: 12px;
 }
 
 .song-title-scroll {
     white-space: nowrap;
     overflow: hidden;
-    font-size: 12px;
-    font-weight: bold;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--text-main);
-    width: 100%;
-}
-
-.player-controls {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.player-controls button {
-    background: transparent;
-    border: none;
-    color: var(--pop-blue);
-    cursor: pointer;
-    font-size: 14px;
-    transition: color 0.2s;
-    padding: 0 5px;
-}
-
-.player-controls button:hover {
-    color: var(--sakura-dark);
-    transform: scale(1.2);
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    max-width: 150px; /* 限制最大宽度 */
 }
 
 /* 移动端适配 */
 @media (max-width: 768px) {
     .music-player-container {
-        bottom: 180px; 
-        left: 10px;
-        top: auto; right: auto; /* 移动端改回左下，避免遮挡菜单 */
-        width: 180px;
-        padding: 5px 10px 5px 5px;
+        bottom: 20px; /* 移动到底部 */
+        top: auto;
+        right: 20px; 
+        left: 20px; /* 居中或撑满 */
+        width: auto;
+        max-width: none;
+        justify-content: space-between;
     }
-    .player-disc {
-        width: 32px;
-        height: 32px;
+    
+    .song-title-scroll {
+        max-width: 200px;
     }
 }
 

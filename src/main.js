@@ -112,9 +112,8 @@ function initMusicPlayer() {
     // 播放列表：请将 .mp3 文件放入 public/music/ 文件夹
     // 并在此处修改文件名
     const playlist = [
-        { title: "Sakura Pop Theme", file: "theme.mp3" },
-        { title: "Dormitory Daily", file: "daily.mp3" },
-        // 添加更多...
+        { title: "遇见 - 孙燕姿", file: "遇见-孙燕姿.mp3" },
+        { title: "成都 - 赵雷", file: "成都-赵雷.mp3" },
     ];
 
     let currentIndex = 0;
@@ -169,7 +168,9 @@ function initMusicPlayer() {
                 // 播放成功
                 isPlaying = true;
                 playIcon.className = 'fas fa-pause';
-                disc.classList.add('playing');
+                // 强制更新标题，确保显示正确
+                songTitle.textContent = playlist[currentIndex].title; 
+                
                 // 开始淡入音量
                 fadeInAudio();
             }).catch(error => {
