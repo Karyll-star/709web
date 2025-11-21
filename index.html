@@ -369,11 +369,11 @@
   <script type="module" src="/src/main.js"></script>
   <!-- Live2D 看板娘 (手动配置版) -->
   <!-- 1. 加载 CSS -->
-  <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu.css">
   
   <!-- 2. 加载核心库 -->
-  <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
-  <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.js"></script>
   
   <!-- 3. 初始化配置 -->
   <script>
@@ -386,9 +386,9 @@
       
       // 初始化看板娘
       initWidget({
-        waifuPath: "https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.json",
-        // 更换为更稳定的静态源 (GitHub CDN)
-        cdnPath: "https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/", 
+        waifuPath: "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/waifu-tips.json",
+        // 更换为更稳定的静态源 (通用 CDN)
+        cdnPath: "https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/", 
         
         // --- 关键配置 ---
         // 尝试修改 modelId:
