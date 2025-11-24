@@ -10,7 +10,8 @@ export default defineConfig({
       input: {
         main: './index.html',
         luya: './luya.html',
-        aim: './aim.html'
+        aim: './aim.html',
+        electricity: './electricity.html'
       }
     }
   }
