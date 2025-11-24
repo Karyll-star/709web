@@ -3,259 +3,697 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>电控学院电量使用统计</title>
+  <title>709电力监控系统</title>
+  <!-- 引入复古等宽字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/@antv/g2plot@latest/dist/g2plot.min.js"></script>
   <script type="module" src="./ecust-electricity-statistics/data.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    :root {
+      /* 绿色层：环境、刻度、静态文本 */
+      --phosphor-main: #33ff33; 
+      --phosphor-dim: #008f11;
+      
+      /* 琥珀色层：核心数据、变量、焦点 */
+      --phosphor-amber: #ffb000;
+      --phosphor-amber-dim: #cc8800;
+
+      /* 金属色层 */
+      --metal-border: #788791;
+      --metal-highlight: #aebbc4;
+      --metal-shadow: #2f363d;
+
+      --screen-bg: #001100;
+      --bezel-color: #1a1a1a;
+      --grid-line: #003300;
+      
+      --bezel-thickness: 20px;
+      --bezel-radius: 15px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background-color: #000;
       margin: 0;
-      padding: 20px;
-      background: #f5f7fa;
-      color: #333;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
+
+    body {
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      color: var(--phosphor-main);
+      text-transform: uppercase;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
     }
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 10px;
+
+    /* 全局 CRT 扫描线效果 */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 999;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+      animation: scanlineScroll 8s linear infinite;
     }
-    .subtitle {
-      color: #7f8c8d;
+
+    @keyframes scanlineScroll {
+      from { background-position: 0 0, 0 0; }
+      to { background-position: 0 -100px, 0 0; }
+    }
+
+    /* 全局屏幕暗角 */
+    body::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+      z-index: 998;
+      pointer-events: none;
+    }
+
+    /* 启动屏幕层 */
+    #boot-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: #000;
+      z-index: 2000;
       font-size: 16px;
+      line-height: 1.5;
+      color: var(--phosphor-main);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
+
+    /* 启动文本样式 */
+    #boot-log {
+      padding: 40px;
+      height: 100%;
+      overflow-y: auto;
+    }
+    .log-line {
+      margin-bottom: 5px;
+      text-shadow: 0 0 5px var(--phosphor-dim);
+    }
+    .log-success {
+      color: var(--phosphor-amber);
+      text-shadow: 0 0 8px var(--phosphor-amber);
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .cursor-block {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background-color: var(--phosphor-amber);
+      animation: blink 0.8s step-end infinite;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+
+    /* 709 徽标层样式 */
+    #logo-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      z-index: 2001;
+      text-align: center;
+    }
+    .big-logo {
+      font-family: 'VT323', monospace;
+      font-size: 20vw;
+      color: var(--phosphor-amber);
+      text-shadow: 
+        0 0 20px var(--phosphor-amber),
+        0 0 40px var(--phosphor-amber-dim),
+        0 0 60px rgba(255, 176, 0, 0.4);
+      letter-spacing: 5vw;
+      animation: flickerLight 0.2s infinite alternate;
+      line-height: 0.8;
+    }
+    .logo-subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 2vw;
+      color: var(--phosphor-amber-dim);
+      text-shadow: 0 0 5px var(--phosphor-amber-dim);
+      margin-top: 20px;
+      letter-spacing: 0.5vw;
+    }
+
+    @keyframes flickerLight {
+      0%, 100% { opacity: 1; filter: brightness(1); }
+      50% { opacity: 0.95; filter: brightness(1.05); }
+    }
+
+    /* 物理屏幕容器 */
+    .screen-display {
+      background-color: var(--screen-bg);
+      border: var(--bezel-thickness) solid var(--bezel-color);
+      border-radius: var(--bezel-radius);
+      box-shadow: 0 0 50px rgba(0, 50, 0, 0.5); 
+      max-width: 1440px;
+      width: calc(100% - (var(--bezel-thickness) * 2));
+      min-height: calc(100vh - (var(--bezel-thickness) * 2));
+      padding: 20px;
+      position: relative;
+      overflow-y: auto;
+      opacity: 0; 
+      transition: opacity 0.5s ease-in;
+    }
+    
+    .screen-display.active {
+      opacity: 1;
+      animation: screenFlicker 0.15s infinite alternate;
+    }
+
+    @keyframes screenFlicker {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(0.99); }
+    }
+
+    /* 文本辉光 */
+    h1, .chart-title {
+      text-shadow: 0 0 8px var(--phosphor-main), 0 0 15px var(--phosphor-dim);
+    }
+
+    .stat-value {
+      color: var(--phosphor-amber);
+      text-shadow: 0 0 10px var(--phosphor-amber), 0 0 20px var(--phosphor-amber-dim);
+    }
+
+    .header {
+      border-bottom: 2px solid var(--phosphor-main);
+      padding-bottom: 20px;
+      margin-bottom: 40px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      color: var(--phosphor-dim);
+      font-size: 14px;
+      margin-top: 5px;
+      letter-spacing: 1px;
+    }
+    
+    .subtitle::before, .subtitle::after {
+      content: " // ";
+      color: var(--phosphor-amber);
+    }
+
+    /* 工业按钮 */
+    .retro-btn {
+      position: absolute;
+      left: var(--bezel-thickness);
+      top: var(--bezel-thickness);
+      background: var(--bezel-color);
+      border: 2px solid var(--phosphor-amber-dim);
+      color: var(--phosphor-amber);
+      padding: 8px 16px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.1s;
+      box-shadow: 0 0 5px var(--phosphor-amber-dim) inset;
+      z-index: 1000;
+      text-shadow: 0 0 5px var(--phosphor-amber-dim);
+    }
+
+    .retro-btn:hover {
+      background: var(--phosphor-amber);
+      color: #000;
+      box-shadow: 0 0 15px var(--phosphor-amber);
+      border-color: var(--phosphor-amber);
+      text-shadow: none;
+    }
+
+    .retro-btn:active {
+      transform: translateY(2px);
+    }
+
     .dashboard {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1400px;
+      gap: 30px;
       margin: 0 auto;
+      justify-content: center;
     }
+
+    /* 终端数据块：金属描边风格 */
     .chart-container {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      background: #050505; /* 更黑的背景以衬托线条 */
+      border: 2px solid var(--metal-border); /* 金属边框 */
       padding: 20px;
       flex: 1;
       min-width: 600px;
+      position: relative;
+      max-width: calc(50% - 15px);
+      
+      /* 金属质感阴影 */
+      box-shadow: 
+        0 0 0 1px var(--metal-shadow),
+        inset 0 0 20px rgba(0,0,0,0.8),
+        0 0 10px rgba(120, 135, 145, 0.2);
     }
+
+    @media (max-width: 1200px) {
+      .chart-container {
+        max-width: 100%;
+      }
+    }
+
+    /* 装饰性角标：螺丝/铆钉风格 */
+    .chart-container::before,
+    .chart-container::after {
+      content: "";
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--metal-highlight);
+      border-radius: 50%;
+      box-shadow: 0 0 2px var(--phosphor-amber);
+    }
+    .chart-container::before {
+      top: 10px; left: 10px;
+    }
+    .chart-container::after {
+      top: 10px; right: 10px;
+    }
+    
+    /* 增加底部的铆钉 */
+    .stat-card::after {
+        content: "";
+        position: absolute;
+        bottom: 5px; right: 5px;
+        width: 4px; height: 4px;
+        background: var(--metal-border);
+        border-radius: 50%;
+    }
+
     .chart-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #2c3e50;
-      margin-bottom: 15px;
+      font-size: 20px;
+      color: var(--phosphor-main);
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px dashed var(--metal-border);
+      padding-bottom: 10px;
     }
+
     .stats-summary {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-top: 20px;
+      gap: 20px;
+      height: 100%;
+      align-content: center;
     }
+
     .stat-card {
-      background: #f8f9fa;
-      border-radius: 6px;
+      background: #080808;
+      border: 1px solid var(--metal-border);
       padding: 15px;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
     }
+
+    /* 核心数据 */
     .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: #3498db;
-      margin: 5px 0;
+      font-size: 36px;
+      margin: 10px 0;
+      font-family: 'VT323', monospace;
     }
+
     .stat-label {
       font-size: 14px;
-      color: #7f8c8d;
+      color: var(--metal-highlight);
+      background: #080808;
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0 10px;
+      border: 1px solid var(--metal-shadow);
     }
+
     .legend {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #7f8c8d;
+      font-size: 12px;
+      color: var(--metal-highlight);
     }
-    .tooltip {
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-size: 14px;
-      max-width: 300px;
+
+    /* 光标 */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
+
+    .blinking-cursor::after {
+      content: "_";
+      color: var(--phosphor-amber);
+      animation: blink 1s step-end infinite;
+      text-shadow: 0 0 5px var(--phosphor-amber);
+    }
+
+    .screen-display::-webkit-scrollbar {
+      width: 10px;
+    }
+    .screen-display::-webkit-scrollbar-track {
+      background: #000;
+    }
+    .screen-display::-webkit-scrollbar-thumb {
+      background: var(--metal-border);
+      border: 1px solid #000;
+    }
+    .screen-display::-webkit-scrollbar-thumb:hover {
+      background: var(--metal-highlight);
+    }
+
   </style>
 </head>
 <body>
-  <div class="header">
-    <a href="index.html" style="position: absolute; top: 20px; left: 20px; text-decoration: none; padding: 10px 15px; background-color: #3498db; color: white; border-radius: 5px; font-weight: bold;">返回首页</a>
-    <h1>电控学院用电数据分析</h1>
-    <p class="subtitle">实时监测 | 数据可视化 | 用电统计</p>
+  <!-- 启动屏幕 -->
+  <div id="boot-screen">
+    <div id="boot-log"></div>
+    <!-- 709 徽标层 (初始隐藏) -->
+    <div id="logo-overlay" style="display: none;">
+      <div class="big-logo">709</div>
+      <div class="logo-subtitle">ACCESS GRANTED</div>
+    </div>
   </div>
-  
-  <div class="dashboard">
-    <div class="chart-container">
-      <div class="stats-summary">
-        <div class="stat-card">
-          <div class="stat-value" id="daily-avg">0 kWh</div>
-          <div class="stat-label">日均用电</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="daily-max">0 kWh</div>
-          <div class="stat-label">单日最高</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="daily-min">0 kWh</div>
-          <div class="stat-label">单日最低</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="daily-total">0 kWh</div>
-          <div class="stat-label">本周总量</div>
-        </div>
-      </div>
-    </div>
-    <div class="chart-container">
-      <div class="chart-title">
-        <span>每小时用电量监测</span>
-        <div class="legend">蓝线：实际用量 | 灰线：预测用量</div>
-      </div>
-      <div id="line-chart" style="height: 400px;"></div>
+
+  <div class="screen-display" id="main-display">
+    <div class="header">
+      <a href="index.html" class="retro-btn">[ < 返回首页 ]</a>
+      <h1>709电力管理系统 <span class="blinking-cursor"></span></h1>
+      <p class="subtitle">709区 // 状态：运行中 // 数据连接：稳定</p>
     </div>
     
-    
+    <div class="dashboard">
+      <!-- Stats Block -->
+      <div class="chart-container" style="flex: 0 0 calc(50% - 15px);">
+        <div class="chart-title">
+          <span>>> 系统指标报告</span>
+          <div class="legend">更新: 实时</div>
+        </div>
+        <div class="stats-summary">
+          <div class="stat-card">
+            <div class="stat-value" id="daily-avg">00.00</div>
+            <div class="stat-label">日均用电</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="daily-max">00.00</div>
+            <div class="stat-label">峰值负荷</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="daily-min">00.00</div>
+            <div class="stat-label">最低负荷</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="daily-total">00.00</div>
+            <div class="stat-label">周总用电</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Block -->
+      <div class="chart-container" style="flex: 0 0 calc(50% - 15px);">
+        <div class="chart-title">
+          <span>>> 示波器读数：每日消耗</span>
+          <div class="legend">通道1: 实际 | 通道2: 预测</div>
+        </div>
+        <div id="line-chart" style="height: 400px;"></div>
+      </div>
+    </div>
   </div>
 
   <script type="module">
-    // 计算每日用电统计
-    function calculateDailyStats(data) {
-      const dailyStats = {};
-      
-      data.forEach(item => {
-        const date = item.time.split(' ')[0]; // 获取日期部分
-        if (!dailyStats[date]) {
-          dailyStats[date] = {
-            date,
-            total: 0,
-            count: 0
-          };
-        }
-        dailyStats[date].total += item.kWh;
-        dailyStats[date].count++;
-      });
-      
-      return Object.values(dailyStats);
-    }
-    
-    // 计算统计摘要
-    function calculateSummary(dailyData) {
-      if (dailyData.length === 0) return {};
-      
-      let total = 0;
-      let max = { date: '', value: Number.MIN_SAFE_INTEGER };
-      let min = { date: '', value: Number.MAX_SAFE_INTEGER };
-      
-      dailyData.forEach(day => {
-        const dayTotal = day.total;
-        total += dayTotal;
+    // 启动动画逻辑
+    const bootSequence = [
+      { text: "INIT_CORE_SYSTEM...", delay: 200, result: "OK" },
+      { text: "LOADING_KERNEL_MODULES (V1.02)", delay: 300, result: "DONE" },
+      { text: "CHECKING_MEMORY_INTEGRITY", delay: 400, result: "PASSED" },
+      { text: "MOUNTING_FILE_SYSTEM", delay: 200, result: "OK" },
+      { text: "INITIALIZING_GRAPHIC_INTERFACE", delay: 500, result: "READY" },
+      { text: "CONNECTING_TO_SECTOR_709_NODE...", delay: 1200, result: "ESTABLISHED" }, // 模拟网络延迟
+      { text: "DECRYPTING_DATA_STREAM", delay: 600, result: "SUCCESS" },
+      { text: "STARTING_SESSION...", delay: 400, result: "" }
+    ];
+
+    const bootLog = document.getElementById('boot-log');
+    const bootScreen = document.getElementById('boot-screen');
+    const logoOverlay = document.getElementById('logo-overlay');
+    const mainDisplay = document.getElementById('main-display');
+
+    // 初始状态：徽标层隐藏，日志层可见
+    logoOverlay.style.display = 'none';
+    bootLog.style.display = 'block'; 
+    mainDisplay.style.opacity = '0'; 
+
+    async function runBootSequence() {
+      for (const step of bootSequence) {
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        line.innerHTML = `${step.text}<span class="cursor-block"></span>`;
+        bootLog.appendChild(line);
         
-        if (dayTotal > max.value) {
-          max = { date: day.date, value: dayTotal };
+        bootLog.scrollTop = bootLog.scrollHeight;
+        await new Promise(r => setTimeout(r, step.delay));
+
+        const cursor = line.querySelector('.cursor-block');
+        if (cursor) cursor.remove();
+
+        if (step.result) {
+          line.innerHTML += `<span class="log-success">[${step.result}]</span>`;
         }
-        
-        if (dayTotal < min.value) {
-          min = { date: day.date, value: dayTotal };
-        }
-      });
+      }
+
+      await new Promise(r => setTimeout(r, 500));
+      bootLog.style.display = 'none';
+      logoOverlay.style.display = 'flex';
+
+      await new Promise(r => setTimeout(r, 2500));
+
+      bootScreen.style.transition = 'opacity 0.5s ease-out';
+      bootScreen.style.opacity = '0';
       
-      return {
-        total,
-        max,
-        min,
-        avg: total / dailyData.length
-      };
+      await new Promise(r => setTimeout(r, 500));
+      
+      bootScreen.style.display = 'none';
+      mainDisplay.style.opacity = '1';
+      mainDisplay.classList.add('active');
+      
+      initChart();
     }
-    
-    // 处理数据
-    const dailyData = calculateDailyStats(data);
-    const summary = calculateSummary(dailyData);
-    
-    // 渲染统计指标
-    document.getElementById('daily-avg').textContent = `${summary.avg.toFixed(1)} kWh`;
-    document.getElementById('daily-max').textContent = `${summary.max.value.toFixed(1)} kWh`;
-    document.getElementById('daily-min').textContent = `${summary.min.value.toFixed(1)} kWh`;
-    document.getElementById('daily-total').textContent = `${summary.total.toFixed(1)} kWh`;
-    
-    // 创建折线图
-    const linePlot = new G2Plot.Line('line-chart', {
-      data,
-      xField: 'time',
-      yField: 'kWh',
-      seriesField: 'type',
-      appendPadding: 20,
-      smooth: true,
-      color: ['#1890ff', '#a0d911'],
-      lineStyle: {
-        lineWidth: 3,
-        strokeOpacity: 0.8,
-      },
-      meta: {
-        time: {
-          alias: '时间',
-          formatter: val => {
-            const date = new Date(val);
-            return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:00`;
+
+    runBootSequence();
+
+    function initChart() {
+      const data = window.data;
+
+      function calculateDailyStats(data) {
+        const dailyStats = {};
+        data.forEach(item => {
+          const date = item.time.split(' ')[0];
+          if (!dailyStats[date]) {
+            dailyStats[date] = {
+              date,
+              total: 0,
+              count: 0
+            };
+          }
+          dailyStats[date].total += item.kWh;
+          dailyStats[date].count++;
+        });
+        return Object.values(dailyStats);
+      }
+      
+      function calculateSummary(dailyData) {
+        if (dailyData.length === 0) return {};
+        let total = 0;
+        let max = { date: '', value: Number.MIN_SAFE_INTEGER };
+        let min = { date: '', value: Number.MAX_SAFE_INTEGER };
+        
+        dailyData.forEach(day => {
+          const dayTotal = day.total;
+          total += dayTotal;
+          if (dayTotal > max.value) max = { date: day.date, value: dayTotal };
+          if (dayTotal < min.value) min = { date: day.date, value: dayTotal };
+        });
+        
+        return {
+          total,
+          max,
+          min,
+          avg: total / dailyData.length
+        };
+      }
+      
+      const dailyData = calculateDailyStats(data);
+      const summary = calculateSummary(dailyData);
+      
+      document.getElementById('daily-avg').textContent = `${summary.avg.toFixed(2)} KWH`;
+      document.getElementById('daily-max').textContent = `${summary.max.value.toFixed(2)} KWH`;
+      document.getElementById('daily-min').textContent = `${summary.min.value.toFixed(2)} KWH`;
+      document.getElementById('daily-total').textContent = `${summary.total.toFixed(2)} KWH`;
+      
+      // G2Plot 配置更新：使用超高亮颜色和金属描边感
+      const linePlot = new G2Plot.Line('line-chart', {
+        data,
+        xField: 'time',
+        yField: 'kWh',
+        seriesField: 'type',
+        appendPadding: 20,
+        smooth: false, 
+        theme: 'dark',
+        // 颜色更新：超亮金 + 超亮青，对比度拉满
+        color: ['#ffeb3b', '#00e5ff'], 
+        lineStyle: {
+          lineWidth: 3, // 线条加粗
+          shadowColor: '#ffeb3b', // 辉光跟随主色
+          shadowBlur: 10, 
+        },
+        meta: {
+          time: {
+            alias: '时间轴',
+            formatter: val => {
+              const date = new Date(val);
+              return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:00`;
+            }
+          },
+          kWh: {
+            alias: '用电量',
+            nice: true
           }
         },
-        kWh: {
-          alias: '用电量 (kWh)',
-          nice: true
-        }
-      },
-      yAxis: {
-        title: {
-          text: '用电量 (kWh)',
-          style: {
-            fontSize: 14,
+        yAxis: {
+          grid: {
+            line: {
+              style: {
+                stroke: 'var(--grid-line)',
+                lineWidth: 1,
+                lineDash: [4, 4]
+              }
+            }
+          },
+          label: {
+            style: {
+              fill: 'var(--metal-highlight)', // 轴标签改为金属亮灰
+              fontFamily: 'Share Tech Mono'
+            }
+          },
+          title: {
+            text: '用电量',
+            style: {
+              fontSize: 14,
+              fill: 'var(--phosphor-main)'
+            }
           }
-        }
-      },
-      xAxis: {
-        label: {
-          autoRotate: true,
-          autoHide: true,
-        }
-      },
-      tooltip: {
-        customContent: (title, items) => {
-          const content = `<div class="tooltip">
-            <div style="margin-bottom:5px;font-weight:bold">${title}</div>
-            ${items.map(item => `
-              <div style="display:flex;align-items:center">
-                <div style="width:8px;height:8px;background:${item.color};margin-right:8px"></div>
-                ${item.name}: ${parseFloat(item.value).toFixed(2)} kWh
-              </div>
-            `).join('')}
-          </div>`;
-          return content;
-        }
-      },
-      slider: {
-        start: 0.1,
-        end: 0.9,
-        trendCfg: {
-          isArea: false,
-        }
-      },
-      interactions: [
-        { type: 'element-active', cfg: { showEnable: [{ trigger: 'element:mouseenter', action: 'cursor:pointer' }] } }
-      ],
-    });
+        },
+        xAxis: {
+          grid: {
+            line: {
+              style: {
+                stroke: 'var(--grid-line)',
+                lineWidth: 1
+              }
+            }
+          },
+          label: {
+            autoRotate: true,
+            autoHide: true,
+            style: {
+              fill: 'var(--metal-highlight)',
+              fontFamily: 'Share Tech Mono'
+            }
+          },
+          title: {
+            text: '时间序列',
+            style: {
+              fontSize: 14,
+              fill: 'var(--phosphor-main)'
+            }
+          }
+        },
+        tooltip: {
+          domStyles: {
+            'g2-tooltip': {
+              backgroundColor: '#080808',
+              border: '1px solid var(--metal-highlight)', /* 金属边框 Tooltip */
+              color: '#ffeb3b',
+              boxShadow: '0 0 10px rgba(0,0,0,0.8)',
+              fontFamily: 'Share Tech Mono'
+            }
+          },
+          customContent: (title, items) => {
+            return `<div style="padding:10px;">
+              <div style="border-bottom:1px solid var(--metal-border);margin-bottom:5px;color:var(--metal-highlight)">时间戳: ${title}</div>
+              ${items.map(item => `
+                <div style="display:flex;align-items:center">
+                  <div style="width:8px;height:8px;background:${item.color};margin-right:8px;box-shadow:0 0 5px ${item.color}"></div>
+                  > ${item.name}: ${parseFloat(item.value).toFixed(2)} 度
+                </div>
+              `).join('')}
+            </div>`;
+          }
+        },
+        slider: {
+          start: 0.1,
+          end: 0.9,
+          height: 20,
+          trendCfg: {
+            isArea: false,
+            lineStyle: {
+              stroke: 'var(--phosphor-dim)'
+            }
+          },
+          handlerStyle: {
+            fill: '#000',
+            stroke: '#ffeb3b',
+            highLightFill: '#ffeb3b'
+          },
+          backgroundStyle: {
+            fill: '#001100',
+            stroke: 'var(--grid-line)'
+          }
+        },
+        interactions: [
+          { type: 'element-active', cfg: { showEnable: [{ trigger: 'element:mouseenter', action: 'cursor:pointer' }] } }
+        ],
+      });
 
-    
-    // 渲染图表
-    linePlot.render();
+      linePlot.render();
+    }
   </script>
 </body>
 </html>
