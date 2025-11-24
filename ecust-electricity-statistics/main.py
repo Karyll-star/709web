@@ -217,7 +217,13 @@ originstring = "[]"
 # read from data.js preprocessed as json
 with suppress(FileNotFoundError):
     with open("data.js", "r", encoding="utf-8") as f:
-        originstring = f.read().lstrip("data=")
+        content = f.read()
+        if content.startswith("window.data="):
+            originstring = content[12:]
+        elif content.startswith("data="):
+            originstring = content[5:]
+        else:
+            originstring = content
 try:
     data: list[ItemType] = json.loads(originstring)
 except json.decoder.JSONDecodeError:
@@ -233,7 +239,7 @@ else:
 # write back to data.js
 if not DEBUG:
     originstring = json.dumps(data, indent=2, ensure_ascii=False)
-    _ = Path("data.js").write_text("data=" + originstring, encoding="utf-8")
+    _ = Path("data.js").write_text("window.data=" + originstring, encoding="utf-8")
     logging.info("write back to data.js")
 
 text = generate_message()

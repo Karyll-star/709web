@@ -1,4 +1,4 @@
-data=[
+window.data=[
   {
     "time": "2023-09-30",
     "kWh": 259.7
