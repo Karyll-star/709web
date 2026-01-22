@@ -759,6 +759,7 @@ function openInNewTab(url) {
 // 趣味区动态渲染与分页
 function initializeFunDirectory() {
     const data = [
+        { url: 'https://wangyiyun.yeyuqiudeng.com/', title: '歌单分析' },
         { url: 'https://www.lalal.ai/zh-hans/', title: '音轨分离' },
         { url: 'https://tianyin.music.163.com/#/', title: '网易音乐' },
         { url: 'https://dashtoon.com/create', title: 'AI漫画' },
