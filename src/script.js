@@ -1,3 +1,5 @@
+import { img } from './config.js';
+
 // 全局变量
 let countdownTimers = {};
 
@@ -293,11 +295,11 @@ function renderCountdownItem(f) {
 function getFestivalsForYear(year) {
     // 简化：公历固定节日，农历节日用近似日期（可后续接入精确农历换算）
     const list = [
-        { name: '周兴生日', month: 11, day: 17, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
-        { name: '刘智睿生日', month: 7, day: 23, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
-        { name: '杨林涣生日', month: 5, day: 25, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
-        { name: '贾昊凝生日', month: 10, day: 9, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
-        { name: '初音未来日', month: 11, day: 11, icon: 'https://img.karyll.xn--6qq986b3xl/file/1756192416941_【哲风壁纸】公主殿下-初音.png' },
+        { name: '周兴生日', month: 11, day: 17, icon: img('/file/1756192416941_【哲风壁纸】公主殿下-初音.png') },
+        { name: '刘智睿生日', month: 7, day: 23, icon: img('/file/1756192416941_【哲风壁纸】公主殿下-初音.png') },
+        { name: '杨林涣生日', month: 5, day: 25, icon: img('/file/1756192416941_【哲风壁纸】公主殿下-初音.png') },
+        { name: '贾昊凝生日', month: 10, day: 9, icon: img('/file/1756192416941_【哲风壁纸】公主殿下-初音.png') },
+        { name: '初音未来日', month: 11, day: 11, icon: img('/file/1756192416941_【哲风壁纸】公主殿下-初音.png') },
         { name: '元旦', month: 1, day: 1, icon: 'https://images.unsplash.com/photo-1519682577862-22b62b24e493?auto=format&fit=crop&w=60&q=80' },
         { name: '情人节', month: 2, day: 14, icon: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=60&q=80' },
         { name: '劳动节', month: 5, day: 1, icon: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=60&q=80' },
